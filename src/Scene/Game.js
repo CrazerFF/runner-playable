@@ -1,0 +1,242 @@
+import { Container, Graphics, Sprite, Assets } from 'pixi.js'; 
+import { Player } from '../objects/Player.js';
+import { Spawner } from '../objects/Spawner.js';
+import { CollisionManager } from '../objects/CollisionManager.js';
+import { ScrollingBackground } from '../objects/ScrollingBackground.js';
+import { TutorialManager } from '../objects/TutorialManager.js';
+
+export class Game extends Container {
+  constructor(designWidth, designHeight, uiLayer) {
+    super();
+    this.DESIGN_W = designWidth;
+    this.DESIGN_H = designHeight;
+    this.roundPixels = true;
+    this.objects = [];
+    this.collidables = [];
+    this.uiLayer = uiLayer;
+    this.scorePanel = uiLayer.scorePanel;
+    this.score = 0;
+    this.gamePaused = false;
+    this.flagJump = false;
+    
+    // ВКЛЮЧАЕМ ИНТЕРАКТИВНОСТЬ КОНТЕЙНЕРА
+    this.eventMode = 'static';
+    this.interactiveChildren = true;
+
+    this.create();
+    this.setupControls();
+  }
+
+  create() {
+    this.sortableChildren = true;
+    // Фон
+    this.bg = new ScrollingBackground('bg', 6000, 704, 5);
+    this.bg.x = -3000;
+    this.addChild(this.bg);
+    this.objects.push(this.bg);
+
+    // Спавнер
+    this.spawner = new Spawner(this, 1280, 720);
+    this.objects.push(this.spawner); 
+    
+    // Игрок
+    this.player = new Player();
+    this.player.x = this.DESIGN_W / 2 - 125;
+    this.player.y = this.DESIGN_H / 2 + 74;
+    this.addChild(this.player);
+    this.objects.push(this.player);
+
+    this.tutorial = new TutorialManager(this);
+    this.addChild(this.tutorial);
+    this.objects.push(this.tutorial);
+  }
+
+  startTutorial() {
+    if (this.gamePaused) return;
+
+    this.gamePaused = true;
+
+    this.tutorial = new Tutorial(this);
+    this.uiLayer.addChild(this.tutorial);
+  }
+
+  setPaused(value) {
+    this.gamePaused = value;
+  }
+
+  update(time) {
+    if (this.gamePaused) return;
+    const delta = time?.deltaTime || 1;
+
+    // апдейт всех объектов
+    for (const obj of this.objects) {
+      if (obj.update) obj.update(delta);
+      if (obj._collectUpdate) {
+         obj._collectUpdate();
+      }
+
+       // удаляем объекты за пределами экрана
+    this.destroyOffscreenObjects();
+    }
+    
+    CollisionManager.check(this.player, this.collidables, (obj) => {
+        if (obj.type === 'enemy') this.onPlayerHit(obj);
+        if ((obj.type === 'money') || (obj.type === 'card')) this.onPlayerCollectItem(obj);
+          });
+  }
+
+
+  onPlayerHit(obj) {
+    if (this.player.isHit) return;
+     if (this.player.isJumping ) return;
+
+    this.player.isHit = true;
+    this.player.playHit();
+    this.player.flashRed();
+    this.uiLayer.heartsDisplay.takeDamage();
+
+    setTimeout(() => {
+      this.player.isHit = false;
+      this.player.playRun();
+    }, 600);
+  }
+
+  onPlayerCollectItem(obj) {
+    if (!obj || obj._collected) return;
+    obj._collected = true;
+
+    const isMoney = obj.type === 'money';
+    const scoreValue = isMoney ? 20 : 35;
+
+    // === стартовые параметры ===
+    const startX = obj.x;
+    const startY = obj.y;
+    const startScale = obj.scale.x;
+    const startRotation = obj.rotation || 0;
+
+    const duration = 30; // кадров
+    let t = 0;
+
+    // сколько крутиться (2 оборота)
+    const totalRotation = Math.PI * 4;
+
+    // === каждый кадр анимация ===
+    obj._collectUpdate = () => {
+      if (obj._collectDone) return;
+      t++;
+      const p = Math.min(t / duration, 1);
+
+      // ease-out cubic
+      const ease = 1 - Math.pow(1 - p, 3);
+
+      // ===== РЕАЛЬНАЯ ЦЕЛЬ: ScorePanel =====
+      const panel = this.uiLayer.scorePanel.panel;
+
+      // локальная точка цели (центр панели)
+      const localTarget = {
+        x: -panel.width * 5,
+        y: panel.height * 3
+      };
+
+      // UI → global → Game
+      const globalTarget = panel.toGlobal(localTarget);
+      const target = this.toLocal(globalTarget);
+
+      // === движение ===
+      obj.x = startX + (target.x - startX) * ease;
+      obj.y = startY + (target.y - startY) * ease;
+
+      // === уменьшение ===
+      const scale = startScale * (1 - p);
+      obj.scale.set(scale);
+
+      // === вращение ===
+      obj.rotation = startRotation + totalRotation * ease;
+
+      // === конец ===
+      if (p >= 1) {
+        obj._collectDone = true;
+        obj._collectUpdate = null;
+        this.addScore(scoreValue);
+        this.destroyObject(obj);
+      }
+    };
+  }
+
+  addScore(value) {  
+    this.score = value;
+    console.log('this.score', this.score);
+    this.uiLayer.scorePanel.addScore(this.score);
+  }
+
+  setupControls() {
+    this.on('touchend', (event) => {
+           if (!this.flagJump) return;
+
+        this.player.jump();
+    });
+
+    this.on('pointerup', (event) => {
+           if (!this.flagJump) return;
+
+        this.player.jump();
+    });
+  };
+  
+  resize(DESIGN_W, DESIGN_H, w, h) {
+    if (!this.bg) return;
+
+    const scaleX = DESIGN_H / h;
+    // Высота фона оставляем в дизайновых единицах
+    this.bg.height = DESIGN_H;
+
+    // Pivot и позиция — центр фонового тайла в сцене
+    this.bg.pivot.set(this.bg.width / 2, this.bg.height / 2);
+    this.bg.position.set(DESIGN_W / 2, DESIGN_H / 2);
+  }
+
+  // ---- метод для удаления объектов за экраном ----
+  destroyOffscreenObjects() {
+    const margin = 800; // запас слева
+    for (let i = this.objects.length - 1; i >= 0; i--) {
+      const obj = this.objects[i];
+
+      // не удаляем фон, игрока и спавнер
+      if (obj === this.bg || obj === this.player || obj === this.spawner) continue;
+
+      if (obj.x + (obj.width || 0) < -margin) {
+        // удалить с канваса
+        if (obj.parent) obj.parent.removeChild(obj);
+
+        // удалить из collidables
+        const collIndex = this.collidables.indexOf(obj);
+        if (collIndex !== -1) this.collidables.splice(collIndex, 1);
+
+        // destroy PIXI (без текстур Assets)
+        if (obj.destroy) obj.destroy({ children: true });
+
+        // удалить из массива объектов
+        this.objects.splice(i, 1);
+      }
+    }
+  }
+
+  destroyObject(obj) {
+    if (!obj) return;
+
+    // убрать из сцены
+    if (obj.parent) obj.parent.removeChild(obj);
+
+    // убрать из objects
+    const i = this.objects.indexOf(obj);
+    if (i !== -1) this.objects.splice(i, 1);
+
+    // убрать из collidables
+    const c = this.collidables.indexOf(obj);
+    if (c !== -1) this.collidables.splice(c, 1);
+
+    obj.destroy();
+  }
+
+
+}

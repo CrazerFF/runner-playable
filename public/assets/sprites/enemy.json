@@ -1,0 +1,1021 @@
+{
+  "frames": {
+    "enemy_walk_13": {
+      "frame": {
+        "x": 1,
+        "y": 1,
+        "w": 161,
+        "h": 359
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 56,
+        "y": 29,
+        "w": 161,
+        "h": 359
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_12": {
+      "frame": {
+        "x": 1,
+        "y": 362,
+        "w": 152,
+        "h": 359
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 65,
+        "y": 29,
+        "w": 152,
+        "h": 359
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_03": {
+      "frame": {
+        "x": 1,
+        "y": 723,
+        "w": 151,
+        "h": 358
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 65,
+        "y": 29,
+        "w": 151,
+        "h": 358
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_11": {
+      "frame": {
+        "x": 1,
+        "y": 1083,
+        "w": 136,
+        "h": 357
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 81,
+        "y": 30,
+        "w": 136,
+        "h": 357
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_14": {
+      "frame": {
+        "x": 1,
+        "y": 1442,
+        "w": 169,
+        "h": 357
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 53,
+        "y": 31,
+        "w": 169,
+        "h": 357
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_04": {
+      "frame": {
+        "x": 139,
+        "y": 1083,
+        "w": 174,
+        "h": 357
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 53,
+        "y": 30,
+        "w": 174,
+        "h": 357
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_02": {
+      "frame": {
+        "x": 154,
+        "y": 723,
+        "w": 145,
+        "h": 357
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 71,
+        "y": 31,
+        "w": 145,
+        "h": 357
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_05": {
+      "frame": {
+        "x": 155,
+        "y": 362,
+        "w": 205,
+        "h": 355
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 39,
+        "y": 33,
+        "w": 205,
+        "h": 355
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_00": {
+      "frame": {
+        "x": 164,
+        "y": 1,
+        "w": 159,
+        "h": 355
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 74,
+        "y": 33,
+        "w": 159,
+        "h": 355
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_01": {
+      "frame": {
+        "x": 325,
+        "y": 1,
+        "w": 134,
+        "h": 354
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 82,
+        "y": 33,
+        "w": 134,
+        "h": 354
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_01": {
+      "frame": {
+        "x": 301,
+        "y": 719,
+        "w": 183,
+        "h": 354
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 51,
+        "y": 31,
+        "w": 183,
+        "h": 354
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_08": {
+      "frame": {
+        "x": 362,
+        "y": 357,
+        "w": 145,
+        "h": 353
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 71,
+        "y": 35,
+        "w": 145,
+        "h": 353
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_19": {
+      "frame": {
+        "x": 461,
+        "y": 1,
+        "w": 146,
+        "h": 353
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 70,
+        "y": 34,
+        "w": 146,
+        "h": 353
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_18": {
+      "frame": {
+        "x": 172,
+        "y": 1442,
+        "w": 155,
+        "h": 353
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 62,
+        "y": 34,
+        "w": 155,
+        "h": 353
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_10": {
+      "frame": {
+        "x": 315,
+        "y": 1075,
+        "w": 134,
+        "h": 353
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 82,
+        "y": 34,
+        "w": 134,
+        "h": 353
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_09": {
+      "frame": {
+        "x": 329,
+        "y": 1430,
+        "w": 143,
+        "h": 353
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 73,
+        "y": 34,
+        "w": 143,
+        "h": 353
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_09": {
+      "frame": {
+        "x": 451,
+        "y": 1075,
+        "w": 165,
+        "h": 353
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 66,
+        "y": 35,
+        "w": 165,
+        "h": 353
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_10": {
+      "frame": {
+        "x": 486,
+        "y": 712,
+        "w": 183,
+        "h": 353
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 48,
+        "y": 35,
+        "w": 183,
+        "h": 353
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_00": {
+      "frame": {
+        "x": 509,
+        "y": 356,
+        "w": 135,
+        "h": 353
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 81,
+        "y": 35,
+        "w": 135,
+        "h": 353
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_17": {
+      "frame": {
+        "x": 609,
+        "y": 1,
+        "w": 185,
+        "h": 351
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 44,
+        "y": 37,
+        "w": 185,
+        "h": 351
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_15": {
+      "frame": {
+        "x": 646,
+        "y": 354,
+        "w": 192,
+        "h": 351
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 43,
+        "y": 37,
+        "w": 192,
+        "h": 351
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_17": {
+      "frame": {
+        "x": 796,
+        "y": 1,
+        "w": 163,
+        "h": 350
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 54,
+        "y": 36,
+        "w": 163,
+        "h": 350
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_16": {
+      "frame": {
+        "x": 474,
+        "y": 1430,
+        "w": 180,
+        "h": 350
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 45,
+        "y": 37,
+        "w": 180,
+        "h": 350
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_18": {
+      "frame": {
+        "x": 618,
+        "y": 1067,
+        "w": 173,
+        "h": 350
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 56,
+        "y": 37,
+        "w": 173,
+        "h": 350
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_08": {
+      "frame": {
+        "x": 671,
+        "y": 707,
+        "w": 160,
+        "h": 349
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 72,
+        "y": 38,
+        "w": 160,
+        "h": 349
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_06": {
+      "frame": {
+        "x": 656,
+        "y": 1419,
+        "w": 173,
+        "h": 349
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 53,
+        "y": 39,
+        "w": 173,
+        "h": 349
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_19": {
+      "frame": {
+        "x": 793,
+        "y": 1058,
+        "w": 156,
+        "h": 349
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 74,
+        "y": 39,
+        "w": 156,
+        "h": 349
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_walk_07": {
+      "frame": {
+        "x": 833,
+        "y": 707,
+        "w": 154,
+        "h": 348
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 62,
+        "y": 38,
+        "w": 154,
+        "h": 348
+      },
+      "sourceSize": {
+        "w": 284,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_11": {
+      "frame": {
+        "x": 840,
+        "y": 353,
+        "w": 208,
+        "h": 347
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 31,
+        "y": 33,
+        "w": 208,
+        "h": 347
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_02": {
+      "frame": {
+        "x": 961,
+        "y": 1,
+        "w": 207,
+        "h": 347
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 29,
+        "y": 25,
+        "w": 207,
+        "h": 347
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_16": {
+      "frame": {
+        "x": 831,
+        "y": 1409,
+        "w": 203,
+        "h": 347
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 33,
+        "y": 38,
+        "w": 203,
+        "h": 347
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_07": {
+      "frame": {
+        "x": 951,
+        "y": 1057,
+        "w": 167,
+        "h": 345
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 65,
+        "y": 42,
+        "w": 167,
+        "h": 345
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_06": {
+      "frame": {
+        "x": 989,
+        "y": 702,
+        "w": 190,
+        "h": 342
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 47,
+        "y": 32,
+        "w": 190,
+        "h": 342
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_15": {
+      "frame": {
+        "x": 1050,
+        "y": 350,
+        "w": 226,
+        "h": 338
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 23,
+        "y": 35,
+        "w": 226,
+        "h": 338
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_05": {
+      "frame": {
+        "x": 1170,
+        "y": 1,
+        "w": 233,
+        "h": 336
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 25,
+        "y": 24,
+        "w": 233,
+        "h": 336
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_03": {
+      "frame": {
+        "x": 1036,
+        "y": 1404,
+        "w": 226,
+        "h": 333
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 22,
+        "y": 20,
+        "w": 226,
+        "h": 333
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_14": {
+      "frame": {
+        "x": 1120,
+        "y": 1046,
+        "w": 242,
+        "h": 325
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 14,
+        "y": 24,
+        "w": 242,
+        "h": 325
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_04": {
+      "frame": {
+        "x": 1181,
+        "y": 690,
+        "w": 264,
+        "h": 323
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 6,
+        "y": 18,
+        "w": 264,
+        "h": 323
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_12": {
+      "frame": {
+        "x": 1278,
+        "y": 339,
+        "w": 230,
+        "h": 318
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 21,
+        "y": 22,
+        "w": 230,
+        "h": 318
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    },
+    "enemy_run_13": {
+      "frame": {
+        "x": 1405,
+        "y": 1,
+        "w": 252,
+        "h": 309
+      },
+      "rotated": false,
+      "trimmed": true,
+      "spriteSourceSize": {
+        "x": 7,
+        "y": 15,
+        "w": 252,
+        "h": 309
+      },
+      "sourceSize": {
+        "w": 310,
+        "h": 388
+      },
+      "pivot": {
+        "x": 0.5,
+        "y": 0.5
+      }
+    }
+  },
+  "animations": {
+    "walk": [
+      "enemy_walk_00",
+      "enemy_walk_01",
+      "enemy_walk_02",
+      "enemy_walk_03",
+      "enemy_walk_04",
+      "enemy_walk_05",
+      "enemy_walk_06",
+      "enemy_walk_07",
+      "enemy_walk_08",
+      "enemy_walk_09",
+      "enemy_walk_10",
+      "enemy_walk_11",
+      "enemy_walk_12",
+      "enemy_walk_13",
+      "enemy_walk_14",
+      "enemy_walk_15",
+      "enemy_walk_16",
+      "enemy_walk_17",
+      "enemy_walk_18",
+      "enemy_walk_19"
+    ],
+    "run": [
+      "enemy_run_00",
+      "enemy_run_01",
+      "enemy_run_02",
+      "enemy_run_03",
+      "enemy_run_04",
+      "enemy_run_05",
+      "enemy_run_06",
+      "enemy_run_07",
+      "enemy_run_08",
+      "enemy_run_09",
+      "enemy_run_10",
+      "enemy_run_11",
+      "enemy_run_12",
+      "enemy_run_13",
+      "enemy_run_14",
+      "enemy_run_15",
+      "enemy_run_16",
+      "enemy_run_17",
+      "enemy_run_18",
+      "enemy_run_19"
+    ]
+  },
+  "meta": {
+    "app": "http://free-tex-packer.com",
+    "version": "0.6.7",
+    "image": "enemy.png",
+    "format": "RGBA8888",
+    "size": {
+      "w": 1658,
+      "h": 1800
+    },
+    "scale": 1
+  }
+}

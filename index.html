@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, height=device-height,
+             initial-scale=1, maximum-scale=1, user-scalable=no"
+  />
+
+  <title>Playable</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+
+      /* ❗ КРИТИЧНО для playable */
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-action: none;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+<script>
+  // ПК / Android
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // iOS
+  document.addEventListener('gesturestart', e => e.preventDefault());
+  document.addEventListener('gesturechange', e => e.preventDefault());
+  document.addEventListener('gestureend', e => e.preventDefault());
+
+  document.body.style.touchAction = 'none';
+</script>
+
+<script type="module" src="./src/main.js"></script>
+
+</body>
+</html>
