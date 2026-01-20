@@ -21,7 +21,10 @@ export class HeartsDisplay extends Container {
     try {
       // Создаем три сердечка-эмодзи
       for (let i = 0; i < this.maxHearts; i++) {
-        const heart = new Text('❤️', this.textStyle);
+        const heart = new Text({
+          text: '❤️',
+          style: this.textStyle
+        });
         heart.anchor.set(0.5);
         heart.scale.set(0.8);
         

@@ -17,14 +17,20 @@ export class ScorePanel extends Container {
     this.score = 0;
 
     // текстовое отображение
-    this.scoreText = new Text('0', new TextStyle({
+    // Создаем стиль текста отдельно
+    const scoreTextStyle = new TextStyle({
       fontFamily: 'font', // шрифт, который загрузили через FontFace
       fontSize: 28,
       fill: 0x0099,
-    //  stroke: 0x000000,
-    //  strokeThickness: 4,
       align: 'right',
-    }));
+    });
+
+    // Текстовое отображение с новым синтаксисом
+    this.scoreText = new Text({
+      text: '0',
+      style: scoreTextStyle
+    });
+
     this.addChild(this.scoreText);
 
     // отступ текста относительно панели

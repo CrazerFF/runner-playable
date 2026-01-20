@@ -1,4 +1,4 @@
-import { Container, Text } from 'pixi.js';
+import { Container, Text, TextStyle } from 'pixi.js';
 
 export class TextPopup extends Container {
   constructor(text, x, y, fontSize) {
@@ -6,7 +6,9 @@ export class TextPopup extends Container {
 
     this.life = 90;
     this.fontSize = fontSize;
-    this.text = new Text(text, {
+    
+    // Создаем стиль текста отдельно
+    const textStyle = new TextStyle({
       fontFamily: 'font',
       fill: '#ffffff',
       fontSize: this.fontSize,
@@ -16,6 +18,12 @@ export class TextPopup extends Container {
         color: 0x000000,
         width: 6
       }
+    });
+
+    // Используем новый синтаксис Text
+    this.text = new Text({
+      text: text,
+      style: textStyle
     });
 
     this.text.anchor.set(0.5);
