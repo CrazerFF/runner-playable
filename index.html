@@ -1,158 +1,52 @@
 <!DOCTYPE html>
-<!-- saved from url=(0104)https://mraid-proxy.dmint.dev/e/ea/ea2/ea24/ea24f/ea24f5/ea24f540-4a75-46ae-94e5-9acaf5912ad8/index.html -->
-<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-	<script>
-	
-	// hack for some strange creatives
-	// /5/51/516/516b/516b6/516b6a/516b6ac1-6025-4829-ad5f-6ba1e2432668/index.html
-	const originalFn = window.al_renderHtml;
-	Object.defineProperty(window, 'al_renderHtml', {
-	  configurable: true,
-	  enumerable: true,
-	  get() {
-		return originalFn;
-	  },
-	  set(newValue) {
-		Object.defineProperty(window, 'al_renderHtml', {
-		  value: function (args) {
-			newValue(args);
-			setTimeout(function() {
-				// If iframe has srcdoc (inline content) and ends with html url, try to replace it with src url
-				const iframe = document.querySelector('iframe');
-				if (!iframe.srcdoc.endsWith('.html')) {
-					return;		
-				}
-				iframe.removeAttribute('srcdoc');
-				iframe.src = args.html;
-			}, 1);
-		  },
-		  writable: true,
-		  configurable: true
-		});
-	  }
-	});
-    
-	var dapiEvents = {};
-	window.dapi = {
-		isReady: function() {
-			return !1;
-		},
-		addEventListener: function(event, f) {
-			if (!(event in dapiEvents)) {
-				dapiEvents[event] = [];
-			}
-	        dapiEvents[event].push(f);
-		},
-		removeEventListener: function(event, f) {
-			if (!(event in dapiEvents)) {
-				return;
-			}
-			if(dapiEvents[event].indexOf(f) != -1) {
-        		dapiEvents[event].splice(dapiEvents[event].indexOf(f), 1);
-    		}   
-		},
-		isDemoDapi: !0,
-		isViewable: function() { 
-			return true;
-		},
-		getScreenSize: function() {
-			return {
-				width: window.innerWidth,
-				height: window.innerHeight,
-			};
-		},	 		
-		getAudioVolume: function() {
-			return 0;
-		},
-        /* hack for some strange creatives */
-		getAudiovolume: function() {
-			return 0;
-		},
-		getAdData: function() {
-			return {};
-		},		
-	    getDeviceData: function() {
-			return {};
-		},
-		openStoreUrl: function(callback, params) {
-			console.log('open store url', callback, params);
-		},
-		setOrientationProperties: function(props) {
-			console.log('setOrientationProperties', props)
-		},
-	};
-	var mraidEvents = {};
-	window.mraid = {
-		getState: function() {
-			return "loading";
-		},
-		getScreenSize: function() {
-			return {
-				width: window.innerWidth,
-				height: window.innerHeight,
-			};
-		},
-	    addEventListener: function(event, f) {
-	        if (!(event in mraidEvents)) {
-				mraidEvents[event] = [];
-			}
-	        mraidEvents[event].push(f);
-		},
-	    removeEventListener: function(event, f) {
-	        if (!(event in mraidEvents)) {
-				return;
-			}
-			if(mraidEvents[event].indexOf(f) != -1) {
-        		mraidEvents[event].splice(mraidEvents[event].indexOf(f), 1);
-    		}   
-		},	  
-	    isViewable: function() {
-			return true;
-		},
-	    getMaxSize: function() {
-			return {
-				width: window.innerWidth,
-				height: window.innerHeight,
-			};
-		},
-	    open: function(url) {
-			window.open(url);
-		},
-	    setOrientationProperties: function(props) {
-			console.log('setOrientationProperties', props);
-		},
-		getVersion() {
-			return "2.0";
-		},
-		useCustomClose(boolValue) {
-			console.log('useCustomClose', boolValue)
-		},
-	};
-	window.addEventListener('load', function() {
-		setTimeout(function() {
-			if ('ready' in mraidEvents) {
-				mraidEvents['ready'].forEach(function(event) {
-					event();
-				});
-			}		
-			if ('ready' in dapiEvents) {
-				dapiEvents['ready'].forEach(function(event) {
-					event();
-				});
-			}
-		}, 1000);
-	});
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, height=device-height,
+             initial-scale=1, maximum-scale=1, user-scalable=no"
+  />
 
-	</script>
-	<style>
-	*::-webkit-scrollbar {
-	  display: none;
-	}
-	* {
-	  -ms-overflow-style: none;
-	  scrollbar-width: none;
-	}
-	</style>
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0"><meta http-equiv="x-ua-compatible" content="ie=edge"><title>JustPlay - Earn or Donate</title><style lang="">html{color:#000;background:#fff}body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}table{border-collapse:collapse;border-spacing:0}fieldset,img{border:0}address,caption,cite,code,dfn,em,strong,th,var{font-style:normal;font-weight:400}ol,ul{list-style:none}caption,th{text-align:left}h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:400}q:before,q:after{content:''}abbr,acronym{border:0;font-variant:normal}sup{vertical-align:text-top}sub{vertical-align:text-bottom}input,textarea,select{font-family:inherit;font-size:inherit;font-weight:inherit;*font-size:100%}legend{color:#000}#yui3-css-stamp.cssreset{display:none}#MW_PLFRAME{border:0;display:block}</style><style>.mtg-package-loading-wrap{position:fixed;top:0;bottom:0;left:0;right:0;z-index:10001;background:#000;font-family:Arial, sans-serif;margin:0;padding:0;list-style:none;font-size:0}.mtg-package-loading-wrap *{margin:0;padding:0;list-style:none}.mtg-package-loading-wrap .mw-app-content{overflow:hidden;width:100%;position:absolute;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);text-align:center;z-index:10}.mtg-package-loading-wrap .mw-app-icon{display:block;width:26%;max-width:195px;border-radius:12px;margin-bottom:2.4737%;position:relative;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%)}.mtg-package-loading-wrap .mw-app-name{margin:0 auto;color:#fff;text-align:center;margin-bottom:2.2489%;font-size:24px;font-weight:500;color:#fff;overflow:hidden;vertical-align:middle;white-space:nowrap;text-overflow:ellipsis}.mtg-package-loading-wrap .mw-star-wrap{display:inline-block;overflow:hidden;position:relative;margin-bottom:2.2489%;width:132px;font-size:0}.mtg-package-loading-wrap .mw-star{height:18px;font-size:0px;position:relative;white-space:nowrap;text-align:left}.mtg-package-loading-wrap .mw-star.mw-start-back i{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAcCAYAAAB2+A+pAAABwklEQVR4AWJwL/AhGc+ePTt85syZb2fNmlUD6LWcAewKojAc27atLjbKsIztpK9TxbaTtW3btu1q7d3Z/5kXc1V8i/fOOd94hjZXB3XC379/J0HaAAjo//Xr10pFxOjlY61Ux1fZxQEBARMhqjMT96Exy2QVQ/IAECt8kk3s4uIyAYIaBnEv5nqJLGKs5Ds6EQPvJRej6HhQySHuwYpfJFpsY2OzAL3cD66j6H9AeBAE7mKxHQPLCCGjGcUInIfilxD4BDji/zTQBogEdIMc4A6egRtwrNaJCwFRkHYwUyVOVljchGmcOkq1IPBPvkLSFkzrDv3i+v3793x8mC2ztBGeLRar+v///3PxZbpM0josqg2M2wnDPkuGOa8Gazn3sa2t7Qy0Ll4iaQXTtcl0Lk9DUqxIaTnbrcV2TD4TKfbR1aIV+4kdZqHiKpHiYdWUUYmxIKarEkWJAQ6LXVRiLIo9Eq3qG1RiJNziUTQbDLHFoANvaHv8jqVgAobwiHZKtiHWmyU2hFYcaqVIDoSnGEZoNwi3ktNAO9QlRsll4AIhZAyPJ9IJNDrFTD6eRnwfJIK7kZGR4wQ8+s8hNxq8YIoZAbVmW6mg2OorAAAAAElFTkSuQmCC)}.mtg-package-loading-wrap .mw-star.mw-start-cover{position:absolute;top:0;left:0;width:100%;bottom:0;z-index:1;overflow:hidden}.mtg-package-loading-wrap .mw-star.mw-start-cover.mw-score-4{width:80%}.mtg-package-loading-wrap .mw-star.mw-start-cover.mw-score-45{width:92%}.mtg-package-loading-wrap .mw-star.mw-start-cover.mw-score-5{width:100%}.mtg-package-loading-wrap .mw-star i{background-image:url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAcCAYAAAB2+A+pAAAB80lEQVR4Ab2XNbgUMRSFcXfp0ZvB3d21w91da9xKtKLFafAGbXB3uBncG9wt4R0S9Fm+3ezuTPGvn/3jUqDX3P7eKA56KBYvFNO6VPIW7wCwuJARsgEWyKBZLGLNwVAr/Itm2puG2Ku2Nw3IDm7XaRKpWIc0OJswW63F7sjEAAoqSdetKB+ycKteo0jESoqBVuJCS9qZjthdWxZX/0qctZaiQdpihFQFHLTRHIxWTOsNSIik05pphuKgp8lXBwYVdorxuG4lLcUIJcUSE96qWJwzz28MyADfFAupmfYpKVYZz1SE1PCX2NGEUfIDHNS34uMxi7/idr2aBXC7cdUYa/1FhdT73+Cy/awkXYhY+slIu+UZ1bjXrLwdlRFJ3+NWnQ7O6QQpyiqmYxmWvgUHrRPOYzxrVkqzOJIh6SvXtpn/4vGgUwkt6WBaUkkv7Zz1Xrm0FPPTFF9Pack0we1pNvN3oFnRVMTX0xTDrlBeYltSW+J0xfaY5Ce+U6dehkb1Ci+xDmlIEn96I1GraBZ7vMQmtNwAB1cUB/3t73CrQQ3FYrPdcRy/vesltoe3fKbHLdtnAArm1zX5ZCxZdkHyqfGlbOHHOqQJQKciCY9IIbXQTIezyyGFSL7GUow1oTPmeQ5u9y7ufcWRootmOqAkbXQV+CeQc7PY24Ik+AAAAABJRU5ErkJggg==);background-size:100% 100%;background-position:0 0;background-repeat:no-repeat;width:20px;height:100%;display:inline-block;margin-right:8px}.mtg-package-loading-wrap .mw-app-span{margin:0 auto;font-weight:400;font-size:14px;width:200px;text-align:center;color:#b4b4b4;word-wrap:break-word;overflow:hidden;text-overflow:ellipsis;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;height:2.6em;line-height:1.3em}.mtg-package-loading-wrap .mw-loading-pic{display:block;width:59.952%;position:absolute;bottom:0%;left:50%;-webkit-transform:translateX(-50%);transform:translateX(-50%);max-width:449.64px;z-index:5}@media only screen and (orientation: portrait){.mtg-package-loading-wrap .mw-app-content{top:27.886%}.mtg-package-loading-wrap .mw-app-name{width:66.2%}}@media only screen and (orientation: portrait) and (max-width: 321px){.mtg-package-loading-wrap .mw-app-name{font-size:20px}.mtg-package-loading-wrap .mw-app-span{font-size:12px}}@media only screen and (orientation: portrait) and (min-width: 700px){.mtg-package-loading-wrap .mw-app-content{top:20.3333%}.mtg-package-loading-wrap .mw-star-wrap{width:232px}.mtg-package-loading-wrap .mw-star{height:38px}.mtg-package-loading-wrap .mw-star i{width:40px}.mtg-package-loading-wrap .mw-app-name{font-size:48px}.mtg-package-loading-wrap .mw-app-span{font-size:30px;width:350px}}@media only screen and (orientation: landscape){.mtg-package-loading-wrap .mw-app-content{top:15.3333%}.mtg-package-loading-wrap .mw-app-icon{width:14.6177%}.mtg-package-loading-wrap .mw-app-span{width:250px}.mtg-package-loading-wrap .mw-star-wrap,.mtg-package-loading-wrap .mw-app-icon,.mtg-package-loading-wrap .mw-app-name{margin-bottom:1.5%}.mtg-package-loading-wrap .mw-app-name{width:66%}.mtg-package-loading-wrap .mw-loading-pic{width:29%}}@media only screen and (orientation: landscape) and (min-width: 734px){.mtg-package-loading-wrap .mw-loading-pic{width:25%}}@media only screen and (orientation: landscape) and (min-width: 811px){.mtg-package-loading-wrap .mw-app-icon{width:10.6177%}.mtg-package-loading-wrap .mw-loading-pic{width:25%}}@media only screen and (orientation: landscape) and (min-width: 1000px){.mtg-package-loading-wrap .mw-app-icon{width:14.606%}.mtg-package-loading-wrap .mw-app-name{font-size:48px}.mtg-package-loading-wrap .mw-star-wrap{width:232px}.mtg-package-loading-wrap .mw-star{height:38px}.mtg-package-loading-wrap .mw-star i{width:40px}.mtg-package-loading-wrap .mw-app-span{font-size:30px;width:350px}.mtg-package-loading-wrap .mw-loading-pic{width:33.7061%}}
-</style></head><body><script src="./index_files/mraid.js"></script><script src="./index_files/f59f1364-36d7-4fa4-8d28-64e82f9fe8c6.js"></script><script>var OMG={imp_url:"https://vg-ali-mtgtracking-adx-k8s.rayjump.com/imp?drp=oi1-eOVSjlfFLk9Lv3QVRlzuJouokAv%2FfARPiUVMiUN2fURTinj9foMMWUhBGnR2iaRTfnDBfajeGaNsinjsinjsiZMMWUhBGnR2iaRTfnDBfajeGaxJilhMWUhBGnR2GlhMWUhBGnR2NlRefjE7oljMjljMVlVBiaveil%3D%3D&sp=&n_lib=1&srp=o0xUGaSQDrfUH0T9fkNFWnxrHURwDUSQDB2ti75rDUxrfnxtHUxqSQtuDkKwL-RdVr53Yk38fdut4BzuHoR1RrD2Dr5Uf7iTDkRPf7VTfnNbHkNFiUveHnlAiFjMDrRFR0M0LkxV4-SQRUEeWozuHcHQhgfuYF90G0RMR0M0JjQ35dQMHZR1iZM0hbxBD-xQHbQND-xERUEB6DRSanRei09bio9eio9eia7ZvxeUYFT_xrKBJdQyYr5dDk2QhBPnDbztJ7fEH-zAEvjRqvjS_v7vQpbA2fy48UXDvHIo9vja&adx_rp=oWeGVltthdSsYbHuYl%3D%3D&tc_token=68e9d4cafecc8e00083d5800_sk.adx-v0_zstdv.v0",ins_url:"https://play.google.com/store/apps/details?id=com.justplay.app&hl=en&gl=US",config:"%7B%22aid%22%3A%2228000%22%2C%22oid%22%3A380755790%2C%22cid%22%3A2880927027%2C%22adx%22%3A%22applovin%22%2C%22sz%22%3A%22320x480%22%2C%22os%22%3A%22android%22%2C%22osv%22%3A%226.0.1%22%2C%22dm%22%3A%22redmi%2B4%22%2C%22rid%22%3A%2268e9d4cafecc8e00083d5800%22%2C%22db%22%3A%22xiaomi%22%2C%22at%22%3A%22vin%22%2C%22tf%22%3A%22app%22%2C%22dt%22%3A4%2C%22nt%22%3A2%2C%22tid%22%3A%22118%22%2C%22pn%22%3A%22com.FortyOneGames.Scratchers%22%2C%22ct%22%3A%22IT%22%2C%22ip%22%3A%22212.70.10.101%22%2C%22did%22%3A%22c80ebccf-85d6-4ff2-b0ec-a0efb4f54af4%22%2C%22andid%22%3A%22%22%2C%22idfv%22%3A%22%22%2C%22imei%22%3A%22%22%2C%22oaid%22%3A%22%22%2C%22crts%22%3A%7B%22%25%25isChina%25%25%22%3A%22%22%7D%2C%22dmv%22%3A%2210.2.1%22%2C%22du%22%3A45%2C%22pto%22%3A1000%2C%22tks%22%3A%22%22%2C%22abk%22%3A%22%22%2C%22abt%22%3A%22%22%2C%22slogo%22%3A%221%22%2C%22mof%22%3A%22%22%2C%22moftype%22%3A%22%22%2C%22opn%22%3A%22com.justplay.app%22%2C%22rs%22%3A%220%22%2C%22htrc%22%3A%22%22%2C%22atltm%22%3A%22%22%2C%22mofaid%22%3A%22%22%2C%22mofuid%22%3A%22%22%2C%22ssz%22%3A%22%22%2C%22dvi%22%3A%22%22%2C%22we%22%3A0%2C%22gaid2%22%3A%22%22%2C%22parent_dsp_id%22%3A20012%2C%22oneid%22%3Anull%2C%22hst_h5_gy%22%3A%22https%3A%2F%2Ftknet.rayjump.com%2Fbatchimp%22%2C%22hst_h5_gq%22%3A%22https%3A%2F%2Fvg-ali-ad-mof-sdk.rayjump.com%22%2C%22hst_h5_st%22%3A%22https%3A%2F%2Fanalytics-h5.rayjump.com%22%2C%22hst_pl_st%22%3A%22https%3A%2F%2Fplayable-stats.mindworks-creative.com%22%2C%22hst_prv%22%3A%22https%3A%2F%2Fwww.mintegral.com%2Fen%2Fabout_mintegral_ads%2F%22%2C%22abf%22%3A%7B%7D%7D",adapter_dns:"https://play.mintegral.com"}</script><script src="./index_files/9f2e4a83-b2d1-4cb3-a7c7-7fca9ecbd9ca.js"></script><script src="./index_files/73c55384-9dd3-40da-8f9c-8079b2f4966a.js"></script><script src="./index_files/92b8d7bb-e614-4a8e-a80c-608ad5521c46.js"></script><script src="./index_files/708b969c-e150-48bf-ab27-007d5108c7bc.js"></script><iframe id="MW_PLFRAME" src="./index_files/8951c90d-59ef-4d44-8fec-ee6da67254a0.html" frameborder="0" width="390px" height="844px"></iframe>
-<script src="./index_files/79efe813-971a-40b5-88f1-2a921130277e.js"></script></body><div><style>.mv_close_style{position:fixed;right:5px;top:5px;z-index:99999999;width:30px;height:30px;line-height:30px;text-align:center;color:#fff;background-size:70%;border-radius:50%;background-position:50% 50%;background-repeat:no-repeat;background-color:rgba(0,0,0,.5);background-image:url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADAAAAAwCAYAAABXAvmHAAABg0lEQVRoQ+2YT0vEMBDF35z34of0JizuSRAXYQ+il1UEP6jgfZZAC2VJk0nmxRpJb6XJm/ebyb9G0PkjnfvHANi6gqMCowLODIwh5Eygu7upAqq6B/AA4EtEXtxREwKq+gjgDsCbiHzmYlkBfgDsJrEPETnkhGu+q+o7gPup77eI3OR0rAAnAMeFGB3iynwIdRKRZwpAEIkEoEF4tE0VmLPgCbSWSa9mEQC7El7zwU8xAAuCYb4awAvBMu8CqIVgmncDlEKwzVMArBAtzNMAchCtzFMB1iCm9X8+HoRX2gZIB1iBWO5hVPNNABIQdPMDIHa+iUzYfoZQbLXpZhKnlso/v4xaDFra5H5eYt+rTqNLoRJjJW2tMC6AGkM1fVIw1QAeI56+1zBVAAwDDI2qjYwVOHcAbDIHmOZng15N8xDyBkpl1KNtAlDVvi+2VPVfXC2Gn5LXX7jcPQO4BfBEu9y1rghbtDPNgS2MWWMOAGumWrUbFWiVWavuqIA1U63adV+BC0vGEEBh2P84AAAAAElFTkSuQmCC');}.mv_close_style.dnclose{background-image:none}.mv_close_style.dnhidden{display:none}</style><div id="mv_close_btn" class="dnclose"></div></div><div style="position:fixed;opacity:0;background:rgba(255,255,255,0);width:100vw;height:100vh;left:0;top:0;right:0;bottom:0;z-index:9999"></div></html>
+  <title>Playable</title>
+
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background: #000;
+
+      /* ❗ КРИТИЧНО для playable */
+      -webkit-touch-callout: none;
+      -webkit-user-select: none;
+      user-select: none;
+      touch-action: none;
+    }
+
+    canvas {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+
+<script>
+  // ПК / Android
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // iOS
+  document.addEventListener('gesturestart', e => e.preventDefault());
+  document.addEventListener('gesturechange', e => e.preventDefault());
+  document.addEventListener('gestureend', e => e.preventDefault());
+
+  document.body.style.touchAction = 'none';
+</script>
+
+<script type="module" src="./src/main.js"></script>
+
+</body>
+</html>
