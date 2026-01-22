@@ -41,6 +41,21 @@ export class TutorialManager extends Container {
     this.textPopup = null;
   }
 
+  animation(delta) {
+  if (!this.hand || !this.hand.visible) return;
+  
+  // Просто используем текущее время
+  const time = Date.now() * 0.003; // текущее время в секундах
+  
+  // Пульсация масштаба
+  const scale = 0.06 + Math.sin(time * 2) * 0.005;
+  this.hand.scale.set(scale);
+  
+  // Легкое движение вверх-вниз
+  const offsetY = Math.sin(time * 1.5) * 3;
+  this.hand.y = this.game.DESIGN_H / 2 + 160 + offsetY; // или другая базовая позиция
+}
+
   // ===== СТАРТОВЫЙ ТУТОРИАЛ =====
   startIntro() {
     if (this.active) return;
@@ -54,13 +69,13 @@ export class TutorialManager extends Container {
     this.clickArea.visible = true;
 
     this.hand.visible = true;
-    this.hand.x = this.game.DESIGN_W / 2;
-    this.hand.y = this.game.DESIGN_H / 2 + 190;
+    this.hand.x = this.game.DESIGN_W / 2 ;
+    this.hand.y = this.game.DESIGN_H / 2 + 160;
 
     this.textPopup = new TextPopup(
       'Tap to start earning!',
       this.hand.x,
-      this.hand.y - 250,
+      this.hand.y - 220,
       45
     );
     this.addChild(this.textPopup);
@@ -97,6 +112,7 @@ export class TutorialManager extends Container {
     console.log('Tutorial tap detected');
     this.active = false;
     this.game.gamePaused = false;
+    this.game.player.playIdle();
     
     // Скрываем кликабельную область
     this.clickArea.visible = false;

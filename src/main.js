@@ -30,7 +30,6 @@ import { UiLayer } from './Hud/UiLayer.js';
     const loadedFont = await font.load();
     document.fonts.add(loadedFont);
     fontLoaded = true;
-    console.log('Шрифт загружен успешно');
   } catch (error) {
     console.warn('Не удалось загрузить шрифт font.ttf:', error);
     console.log('Будет использован системный шрифт');
@@ -43,7 +42,6 @@ import { UiLayer } from './Hud/UiLayer.js';
   try {
     await Assets.init({ manifest });
     await Assets.loadBundle('game');
-    console.log('Ресурсы игры загружены');
   } catch (error) {
     console.error('Ошибка загрузки ресурсов игры:', error);
     
@@ -70,11 +68,19 @@ import { UiLayer } from './Hud/UiLayer.js';
   app.stage.addChild(scene);
   app.stage.addChild(uiLayer);
 
-  // 7. Функция ресайза
+  let lastDpr = 2;
+
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     app.renderer.resolution = dpr;
+
     app.renderer.resize(window.innerWidth, window.innerHeight);
+
+    if (dpr !== lastDpr) {
+      const scaleDpr = 2 / dpr;
+      uiLayer.onDprChange(dpr);
+
+    }
 
     const w = app.renderer.width;
     const h = app.renderer.height;
@@ -98,19 +104,16 @@ import { UiLayer } from './Hud/UiLayer.js';
   window.addEventListener('resize', resize);
   window.addEventListener('orientationchange', resize);
   
-  // 9. Первый вызов ресайза
   resize(); 
 
-  // 10. Игровой цикл
   let lastTime = 0;
-  app.ticker.add((time) => {
-    const delta = time - lastTime;
-    lastTime = time;
-    scene.update(delta);
+
+  app.ticker.add((ticker) => {
+    scene.update(ticker.deltaTime);
     
     // Обновляем UI слой если есть метод update
     if (uiLayer.update) {
-      uiLayer.update(delta);
+      uiLayer.update(ticker.deltaTime);
     }
   });
 
@@ -129,28 +132,6 @@ import { UiLayer } from './Hud/UiLayer.js';
 
 })().catch((error) => {
   console.error('Фатальная ошибка при запуске игры:', error);
-  
-  // Показываем сообщение об ошибке пользователю
-  const errorDiv = document.createElement('div');
-  errorDiv.style.cssText = `
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 20px rgba(0,0,0,0.3);
-    text-align: center;
-    z-index: 9999;
-    max-width: 80%;
-  `;
-  
-  errorDiv.innerHTML = `
-    <h3>Ошибка загрузки игры</h3>
-    <p>${error.message || 'Неизвестная ошибка'}</p>
-    <button onclick="location.reload()">Перезагрузить</button>
-  `;
   
   document.body.appendChild(errorDiv);
 });

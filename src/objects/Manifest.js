@@ -40,6 +40,10 @@ export const manifest = {
           src: 'assets/sprites/pole.png'
         },
         {
+          alias: 'finish',
+          src: 'assets/sprites/finish.png'
+        },
+        {
           alias: 'cone',
           src: 'assets/sprites/cone.webp'
         },
@@ -54,7 +58,47 @@ export const manifest = {
         {
           alias: 'hand',
           src: 'assets/sprites/hand.png'
-        }
+        },
+        {
+          alias: 'flash',
+          src: 'assets/sprites/flash.png'
+        }, 
+        {
+          alias: 'tape1',
+          src: 'assets/sprites/tape1.png'
+        }, 
+        {
+          alias: 'tape2',
+          src: 'assets/sprites/tape2.png'
+        },
+        {
+          alias: 'stick',
+          src: 'assets/sprites/stick.png'
+        },
+        {
+          alias: 'spark1',
+          src: 'assets/sprites/spark1.png'
+        },
+        {
+          alias: 'spark2',
+          src: 'assets/sprites/spark2.png'
+        },
+        {
+          alias: 'spark3',
+          src: 'assets/sprites/spark3.png'
+        },
+        {
+          alias: 'spark4',
+          src: 'assets/sprites/spark4.png'
+        },
+        {
+          alias: 'download',
+          src: 'assets/sprites/download.webp'
+        },
+        {
+          alias: 'fail',
+          src: 'assets/sprites/fail.png'
+        },
         
       ]
     }

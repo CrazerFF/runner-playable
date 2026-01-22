@@ -1,9 +1,9 @@
 import { Container, AnimatedSprite, Assets, Graphics} from 'pixi.js';
 
 export class Enemy extends Container {
-  constructor() {
+  constructor(scene) {
     super();
-
+    this.scene = scene;
     const sheet = Assets.get('enemy_json');
   
     this.animations = {
@@ -47,6 +47,12 @@ export class Enemy extends Container {
   }
 
   update(delta) {
-    this.x -= this.speed * delta;
+    this.x -= this.speed * 1.2 * delta;
+    if (this.scene.player.staying) {
+      this.sprite.stop();
+    } else if (this.x <= this.scene.DESIGN_W/3.5) {
+      this.playRun();
+      this.x -= this.speed * 1.5 * delta;
+    }
   }
 }

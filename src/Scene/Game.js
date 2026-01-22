@@ -4,6 +4,11 @@ import { Spawner } from '../objects/Spawner.js';
 import { CollisionManager } from '../objects/CollisionManager.js';
 import { ScrollingBackground } from '../objects/ScrollingBackground.js';
 import { TutorialManager } from '../objects/TutorialManager.js';
+import { Tape } from '../objects/Tape.js';
+import { Firework } from '../objects/Firework.js';
+import { FireworkSequence } from '../objects/FireworkSequence.js';
+import { GameScoreDisplay} from '../objects/GameScoreDisplay.js'
+import { CtaButton } from '../Hud/CtaButton.js';
 
 export class Game extends Container {
   constructor(designWidth, designHeight, uiLayer) {
@@ -17,6 +22,7 @@ export class Game extends Container {
     this.scorePanel = uiLayer.scorePanel;
     this.score = 0;
     this.gamePaused = false;
+    this.gameFinished = false;
     this.flagJump = false;
     
     // ВКЛЮЧАЕМ ИНТЕРАКТИВНОСТЬ КОНТЕЙНЕРА
@@ -40,7 +46,7 @@ export class Game extends Container {
     this.objects.push(this.spawner); 
     
     // Игрок
-    this.player = new Player();
+    this.player = new Player(this);
     this.player.x = this.DESIGN_W / 2 - 125;
     this.player.y = this.DESIGN_H / 2 + 74;
     this.addChild(this.player);
@@ -49,7 +55,29 @@ export class Game extends Container {
     this.tutorial = new TutorialManager(this);
     this.addChild(this.tutorial);
     this.objects.push(this.tutorial);
+
+    this.tape = new Tape(0, 320);
+    this.addChild(this.tape);
+    this.tape.visible = false;
+    this.objects.push(this.tape);
+
+    this.seq = new FireworkSequence(this, this.DESIGN_W);
+
+    this.gameScore = new GameScoreDisplay(this.uiLayer.scorePanel);
+    this.addChild(this.gameScore);
+    this.gameScore.x = 150;
+    this.gameScore.y = 410;
+    this.gameScore.scale.set(0.7);
+    this.gameScore.zIndex = 3000;
+    this.gameScore.visible = false;
   }
+
+  onGameOver() {
+    this.scene.gameFinished = true;       // чтобы включить секвенцию
+  //  this.scene.seq.start();               // запускаем таймлайн
+    this.scene.gameScore.visible = true;  // показываем финальные очки
+    this.scene.uiLayer.installButton.visible = true; // показываем кнопку
+}
 
   startTutorial() {
     if (this.gamePaused) return;
@@ -64,44 +92,57 @@ export class Game extends Container {
     this.gamePaused = value;
   }
 
-  update(time) {
-    if (this.gamePaused) return;
-    const delta = time?.deltaTime || 1;
-
+  update(delta) {
+      this.seq.update(delta);
+      this.uiLayer.ctaButton.update(delta);
+      this.uiLayer.installButton.update(delta);
+      this.gameScore.update(delta);
+   if (this.gamePaused) {
+    // Обновляем только вращение flash объектов
+    for (const obj of this.objects) {
+      if (obj && obj.type === 'flash' && obj.rotationSpeed) {
+        obj.rotation += obj.rotationSpeed * delta;
+      }
+    }
+    if (this.tutorial.hand) {
+      this.tutorial.animation(delta);
+    }
+    if (this.tape) {
+      this.tape.update(delta);
+    }
+  
+  }
+  if (this.gamePaused) return;
     // апдейт всех объектов
     for (const obj of this.objects) {
       if (obj.update) obj.update(delta);
       if (obj._collectUpdate) {
          obj._collectUpdate();
-      }
+      } 
 
        // удаляем объекты за пределами экрана
     this.destroyOffscreenObjects();
     }
     
     CollisionManager.check(this.player, this.collidables, (obj) => {
-        if (obj.type === 'enemy') this.onPlayerHit(obj);
-        if ((obj.type === 'money') || (obj.type === 'card')) this.onPlayerCollectItem(obj);
+        if ((obj.type === 'enemy') || (obj.type === 'cone')) this.onPlayerHit(obj);
+        if ((obj.type === 'money') || (obj.type === 'card')) this.onPlayerCollectItem(obj, delta);
           });
   }
 
-
-  onPlayerHit(obj) {
+ 
+onPlayerHit(obj) {
     if (this.player.isHit) return;
-     if (this.player.isJumping ) return;
+    if (this.player.isJumping) return;
 
     this.player.isHit = true;
-    this.player.playHit();
+    this.player.playHit();   // теперь сам Player решает, когда вернуться в бег
     this.player.flashRed();
     this.uiLayer.heartsDisplay.takeDamage();
+}
 
-    setTimeout(() => {
-      this.player.isHit = false;
-      this.player.playRun();
-    }, 600);
-  }
 
-  onPlayerCollectItem(obj) {
+  onPlayerCollectItem(obj, delta) {
     if (!obj || obj._collected) return;
     obj._collected = true;
 
@@ -114,7 +155,7 @@ export class Game extends Container {
     const startScale = obj.scale.x;
     const startRotation = obj.rotation || 0;
 
-    const duration = 30; // кадров
+    const duration = 40 ; // кадров
     let t = 0;
 
     // сколько крутиться (2 оборота)
@@ -127,14 +168,14 @@ export class Game extends Container {
       const p = Math.min(t / duration, 1);
 
       // ease-out cubic
-      const ease = 1 - Math.pow(1 - p, 3);
+      const ease = 1 - Math.pow(1 - p, 3) * delta;
 
       // ===== РЕАЛЬНАЯ ЦЕЛЬ: ScorePanel =====
       const panel = this.uiLayer.scorePanel.panel;
 
       // локальная точка цели (центр панели)
       const localTarget = {
-        x: -panel.width * 5,
+        x: -panel.width * 4,
         y: panel.height * 3
       };
 
@@ -202,7 +243,7 @@ export class Game extends Container {
       const obj = this.objects[i];
 
       // не удаляем фон, игрока и спавнер
-      if (obj === this.bg || obj === this.player || obj === this.spawner) continue;
+      if (obj === this.bg || obj === this.player || obj === this.spawner || obj === this.tape ) continue;
 
       if (obj.x + (obj.width || 0) < -margin) {
         // удалить с канваса

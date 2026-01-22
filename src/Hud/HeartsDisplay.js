@@ -7,12 +7,15 @@ export class HeartsDisplay extends Container {
     this.currentHearts = this.maxHearts;
     this.hearts = [];
     this.heartSpacing = 15; // Увеличим расстояние
+    this.baseScale = 1;
+    this.gameOver = false;
     
     // Позиционирование
-    this.x = 40;
-    this.y = 40;
+    this.x = 0;
+    this.y = 0;
     this.zIndex = 999;
     this.createHearts();
+    this.onDprChange(1);
   }
   
   createHearts() {
@@ -22,13 +25,17 @@ export class HeartsDisplay extends Container {
       // Создаем три сердечка-эмодзи
       for (let i = 0; i < this.maxHearts; i++) {
         const heart = new Text({
-          text: '❤️',
-          style: this.textStyle
-        });
-        heart.anchor.set(0.5);
-        heart.scale.set(0.8);
+        text: '❤️',
+        style: {
+          fontFamily: 'font',
+          fontSize: 30*4,   // ← увеличивай ТУТ
+          align: 'center'
+        }
+      });
+        heart.anchor.set(0);
+        heart.scale.set(0.25);
         
-        heart.x = i * (28 + this.heartSpacing); // Фиксированная ширина 60
+        heart.x = i * (120 * 0.25 + this.heartSpacing); // Фиксированная ширина 60
         heart.y = 20; // Фиксированная высота
         
         // Начальная альфа - все сердечки полные
@@ -43,9 +50,18 @@ export class HeartsDisplay extends Container {
    //   console.error('Error creating hearts:', error);
     } 
   }
+ 
+
+  onDprChange(scaleDpr) {
+    this.scale.set(this.baseScale / scaleDpr);
+    this.x = 20/ scaleDpr;
+    this.y = 20/ scaleDpr;
+
+  };
   // Метод причинения урона
   takeDamage() {
-    if (this.currentHearts <= 0) {
+    if (this.currentHearts === 1 ) {
+      this.gameOver = true;
         return false;
     }
     

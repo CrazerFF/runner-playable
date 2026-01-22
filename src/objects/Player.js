@@ -2,11 +2,13 @@ import { Container, Graphics } from 'pixi.js';
 import { AnimatedSprite, Assets } from 'pixi.js';
 
 export class Player extends Container {
-  constructor() {
+  constructor(scene) {
     super();
-    
+    this.scene = scene;
     // Получаем спрайтшит
+    this.staying  = false;
     const sheet = Assets.get('player_json'); 
+    this.isHit = false;
     
     // Создаем анимированный спрайт ВНУТРИ контейнера
     this.sprite = new AnimatedSprite(sheet.animations['idle']);
@@ -30,7 +32,7 @@ export class Player extends Container {
     // Физика прыжка
     this.isJumping = false;
     this.jumpVelocity = 0;
-    this.gravity = 0.4;
+    this.gravity = 0.5;
     this.jumpPower = -13.5;
     this.startY = 0;
 
@@ -56,19 +58,23 @@ export class Player extends Container {
 
   // ===== ANIMATIONS =====
   playIdle() { 
+    this.staying = true;
     this._play('idle', 0.1, true); 
   }
   
   playRun() { 
-    this._play('run', 0.1, true); 
+    this.staying = false;
+    this._play('run', 0.14, true); 
     this.y = 420;
   }
   
   playJump() { 
+    this.staying = false;
     this._play('jump', 0.3, false); 
   }
   
   playHit() { 
+    this.staying = false;
     this._play('hit', 0.1, false); 
   }
 
@@ -88,6 +94,7 @@ export class Player extends Container {
   // ===== JUMP =====
   jump() {
     if (this.isJumping) return;
+    if (this._isFlashing) return;
     
     this.isJumping = true;
     this.jumpVelocity = this.jumpPower;
@@ -114,6 +121,11 @@ export class Player extends Container {
         setTimeout(flash, 80); // скорость мигания
       } else {
         this._isFlashing = false;
+        this.isHit = false;        
+        if (!this.scene.uiLayer.heartsDisplay.gameOver) {
+            this.playRun();
+        }
+        
       }
     }, 80);
   };

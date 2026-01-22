@@ -11,12 +11,12 @@ export class TextPopup extends Container {
     const textStyle = new TextStyle({
       fontFamily: 'font',
       fill: '#ffffff',
-      fontSize: this.fontSize,
+      fontSize: this.fontSize * 4,
       fontWeight: '700',
       align: 'center',
       stroke: {
         color: 0x000000,
-        width: 6
+        width: 6*4
       }
     });
 
@@ -32,7 +32,8 @@ export class TextPopup extends Container {
 
     this.x = x;
     this.y = y;
-    //this.roundPixels = true;
+    this.text.scale.set(0.25);
+    this.roundPixels = true;
   }
 
   update(delta) {
