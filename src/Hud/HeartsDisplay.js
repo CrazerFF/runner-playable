@@ -59,21 +59,23 @@ export class HeartsDisplay extends Container {
 
   };
   // Метод причинения урона
-  takeDamage() {
-    if (this.currentHearts === 1 ) {
-      this.gameOver = true;
-        return false;
-    }
-    
+ takeDamage() {
     // Находим первое неповрежденное сердечко справа налево
     for (let i = this.maxHearts - 1; i >= 0; i--) {
-      const heart = this.hearts[i];
-      if (heart.alpha === 1) {
-        heart.alpha = 0.3; 
-        this.currentHearts--;
-        return true;
-      }
+        const heart = this.hearts[i];
+        if (heart.alpha === 1) {
+            heart.alpha = 0.3; // затемняем сердечко
+            this.currentHearts--;
+
+            // Проверка на конец игры
+            if (this.currentHearts <= 0) {
+                this.gameOver = true;
+                this.currentHearts = 0;
+            }
+
+            return true;
+        }
     }
-  
-  }
+}
+
 }

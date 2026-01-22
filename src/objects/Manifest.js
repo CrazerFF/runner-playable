@@ -5,7 +5,7 @@ export const manifest = {
       assets: [     // ОБЯЗАТЕЛЬНО массив объектов
         {
           alias: 'bg', // ключ для Assets.get('background')
-          src: 'assets/sprites/bg.png' // путь от корня (public/)
+          src: 'assets/sprites/bg.webp' // путь от корня (public/)
         },
         {
           alias: 'player_json',
@@ -17,7 +17,7 @@ export const manifest = {
         },
         {
           alias: 'money',
-          src: 'assets/sprites/money.png'
+          src: 'assets/sprites/money.webp'
         },
         {
           alias: 'card',
@@ -29,19 +29,19 @@ export const manifest = {
         },
          {
           alias: 'tree',
-          src: 'assets/sprites/tree1.png'
+          src: 'assets/sprites/tree1.webp'
         },
          {
           alias: 'tree2',
-          src: 'assets/sprites/tree2.png'
+          src: 'assets/sprites/tree2.webp'
         },
         {
           alias: 'pole',
-          src: 'assets/sprites/pole.png'
+          src: 'assets/sprites/pole.webp'
         },
         {
           alias: 'finish',
-          src: 'assets/sprites/finish.png'
+          src: 'assets/sprites/finish.webp'
         },
         {
           alias: 'cone',
@@ -57,39 +57,39 @@ export const manifest = {
         },
         {
           alias: 'hand',
-          src: 'assets/sprites/hand.png'
+          src: 'assets/sprites/hand.webp'
         },
         {
           alias: 'flash',
-          src: 'assets/sprites/flash.png'
+          src: 'assets/sprites/flash.webp'
         }, 
         {
           alias: 'tape1',
-          src: 'assets/sprites/tape1.png'
+          src: 'assets/sprites/tape1.webp'
         }, 
         {
           alias: 'tape2',
-          src: 'assets/sprites/tape2.png'
+          src: 'assets/sprites/tape2.webp'
         },
         {
           alias: 'stick',
-          src: 'assets/sprites/stick.png'
+          src: 'assets/sprites/stick.webp'
         },
         {
           alias: 'spark1',
-          src: 'assets/sprites/spark1.png'
+          src: 'assets/sprites/spark1.webp'
         },
         {
           alias: 'spark2',
-          src: 'assets/sprites/spark2.png'
+          src: 'assets/sprites/spark2.webp'
         },
         {
           alias: 'spark3',
-          src: 'assets/sprites/spark3.png'
+          src: 'assets/sprites/spark3.webp'
         },
         {
           alias: 'spark4',
-          src: 'assets/sprites/spark4.png'
+          src: 'assets/sprites/spark4.webp'
         },
         {
           alias: 'download',
@@ -97,7 +97,7 @@ export const manifest = {
         },
         {
           alias: 'fail',
-          src: 'assets/sprites/fail.png'
+          src: 'assets/sprites/fail.webp'
         },
         
       ]
