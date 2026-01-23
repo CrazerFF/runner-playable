@@ -1,5 +1,6 @@
 import { Sprite, Assets, Graphics } from 'pixi.js';
 import { Enemy } from './Enemy.js';
+import { sound } from './SoundManager';
 
 export class Spawner {
   constructor(scene, designWidth, designHeight) {
@@ -328,6 +329,8 @@ export class Spawner {
         obj.type = 'flash';
         obj.rotationSpeed = 0.03;
         obj.zIndex = 1399;
+        sound.play('finish');
+        sound.stopMusic();
         break;
       case 'tape':
         this.scene.tape.visible = true;
@@ -349,6 +352,8 @@ export class Spawner {
         obj.anchor.set(0.5, 0.5);
         obj.type = 'fail';
         obj.zIndex = 5000;
+        sound.play('fail');
+        sound.stopMusic();
         break;
     }
 

@@ -1,4 +1,5 @@
 import { Container, Graphics, Sprite, Assets } from 'pixi.js'; 
+import { sound } from '../objects/SoundManager';
 import { Player } from '../objects/Player.js';
 import { Spawner } from '../objects/Spawner.js';
 import { CollisionManager } from '../objects/CollisionManager.js';
@@ -31,6 +32,11 @@ export class Game extends Container {
 
     this.create();
     this.setupControls();
+
+    // запуск фоновой музыки
+    window.addEventListener('pointerdown', () => {
+    sound.playMusic();
+    }, { once: true });
   }
 
   create() {
@@ -70,6 +76,18 @@ export class Game extends Container {
     this.gameScore.scale.set(0.7);
     this.gameScore.zIndex = 3000;
     this.gameScore.visible = false;
+
+    const click = new Howl({ src: ['click.mp3'], volume: 0.6 });
+
+    this.on('pointerdown', () => {
+      click.play();
+    });
+
+    const music = new Howl({
+    src: ['music.mp3'],
+    loop: true,
+    volume: 0.3,
+});
   }
 
   onGameOver() {
@@ -134,7 +152,7 @@ export class Game extends Container {
 onPlayerHit(obj) {
     if (this.player.isHit) return;
     if (this.player.isJumping) return;
-
+    sound.play('hit');
     this.player.isHit = true;
     this.player.playHit();   // теперь сам Player решает, когда вернуться в бег
     this.player.flashRed();
@@ -145,6 +163,7 @@ onPlayerHit(obj) {
   onPlayerCollectItem(obj, delta) {
     if (!obj || obj._collected) return;
     obj._collected = true;
+    sound.play('collect');
 
     const isMoney = obj.type === 'money';
     const scoreValue = isMoney ? 20 : 35;
@@ -213,8 +232,11 @@ onPlayerHit(obj) {
   setupControls() {
     this.on('touchend', (event) => {
            if (!this.flagJump) return;
+           if (this.gamePaused) return;
 
         this.player.jump();
+        sound.play('jump');
+
     });
 
     this.on('pointerup', (event) => {

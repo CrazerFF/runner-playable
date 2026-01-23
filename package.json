@@ -10,6 +10,7 @@
     "build:zip": "npm run build && npm run zip"
   },
   "dependencies": {
+    "howler": "^2.2.4",
     "pixi.js": "^8.14.3"
   },
   "devDependencies": {

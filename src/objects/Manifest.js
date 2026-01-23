@@ -110,7 +110,7 @@ export const manifest = {
          {
           alias: 'kust3',
           src: 'assets/sprites/kust3.webp'
-        },
+        }
         
       ]
     }
