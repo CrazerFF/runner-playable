@@ -48,7 +48,7 @@ export class TutorialManager extends Container {
   const time = Date.now() * 0.003; // текущее время в секундах
   
   // Пульсация масштаба
-  const scale = 0.06 + Math.sin(time * 2) * 0.005;
+  const scale = 1 + Math.sin(time * 2) * 0.005;
   this.hand.scale.set(scale);
   
   // Легкое движение вверх-вниз

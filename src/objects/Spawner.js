@@ -14,7 +14,10 @@ export class Spawner {
     this.treeDelay2 = 75;
     this.poleTimer = 0;
     this.poleDelay = 100;
-
+    this.kustTimer = 0;
+    this.kustDelay = 100; // Исправлено: было kuetDelay
+    this.currentKustIndex = 0; // Индекс текущего куста для поочерёдного спавна
+    
     // Для точечного спавна
     this.timeAccumulator = 0;
 
@@ -44,7 +47,6 @@ export class Spawner {
       { time: 15.5, type: 'cone', x: 1500, y: 430, texture: 'cone' },
       { time: 15.6, type: 'card', x: 1500, y: 320, texture: 'card' },
 
-
       { time: 18.5, type: 'enemy', x: 1400, y: 530 },
       { time: 18.6, type: 'card', x: 1500, y: 320, texture: 'card' },
       { time: 19.3, type: 'card', x: 1500, y: 320, texture: 'card' },
@@ -64,19 +66,17 @@ export class Spawner {
       { time: 24.2, type: 'tape'},
       { time: 29.2, type: 'tear'},
       { time: 29.9, type: 'firework'},
-    //  { time: 0, type: 'firework'},
-
-   
 
     ];
 
-    // ======== Заполняем экран деревьями и столбами на старте ========
-    const visibleWidth = this.designWidth + 400; // ширина видимой зоны + запас
-    const spacing = 500; // расстояние между объектами
+    // ======== Заполняем экран деревьями, столбами и кустами на старте ========
+    const visibleWidth = this.designWidth + 400;
+    const spacing = 500;
     for (let x = 0; x <= visibleWidth; x += spacing) {
       this.scheduledSpawns.unshift({ time: 0, type: 'tree', x, y: this.designHeight * 0.0 });
       this.scheduledSpawns.unshift({ time: 0, type: 'tree2', x, y: this.designHeight * 0.0 });
       this.scheduledSpawns.unshift({ time: 0, type: 'pole', x, y: this.designHeight * 0.035 });
+      this.scheduledSpawns.unshift({ time: 0, type: 'kust', x, y: this.designHeight * 0.53 });
     }
   }
 
@@ -101,8 +101,14 @@ export class Spawner {
       this.poleTimer = 0;
     }
 
+    this.kustTimer += delta;
+    if (this.kustTimer >= this.kustDelay) {
+      this.spawnKust();
+      this.kustTimer = 0;
+    }
+
     // ===== Точечный спавн =====
-    this.timeAccumulator += delta * (1 / 60); // в секундах
+    this.timeAccumulator += delta * (1 / 60);
     for (const spawn of this.scheduledSpawns) {
       if (!spawn.spawned && this.timeAccumulator >= spawn.time) {
         this.spawnByType(spawn);
@@ -117,78 +123,62 @@ export class Spawner {
       if (obj === this.scene.player) continue;
       if (obj === this.scene.bg) continue;
       if (obj === this.scene.tutorial) continue;
-    //  if (obj === this.scene.tape) continue;
-      
       
       // Статические объекты (не двигаются)
-      const staticObjects = ['flash', 'paypal']; // добавьте все статические
+      const staticObjects = ['flash', 'paypal'];
       if (obj.type && staticObjects.includes(obj.type)) continue;
-
 
       obj.x -= speed * delta;
       if (obj.type === 'coneFlash') {
-        // Мигание с частотой 2 Гц (2 раза в секунду)
-        const blinkSpeed = 1.5; // частота мигания
+        const blinkSpeed = 1.5;
         const alpha = 0.5 + Math.sin(Date.now() * 0.001 * blinkSpeed * Math.PI * 2) * 0.5;
-        obj.alpha = Math.max(0.3, alpha); // от 0.3 до 1.0
+        obj.alpha = Math.max(0.3, alpha);
       }
     }
+    
     if (this.scene.uiLayer.heartsDisplay.gameOver) {
-       this.scene.player.playIdle();
-      // this.fail();
-      // тут сет таймаут и
+      this.scene.player.playIdle();
       this.spawnGameOverSequence();
     }
-    
   }
-spawnGameOverSequence() {
+
+  spawnGameOverSequence() {
     if (!this.scene || !this.scene.addChild) return;
 
     this.scene.gamePaused = true;
 
-    // 1. Создаем затемнение
     const overlay = new Graphics();
     overlay.rect(-10000, -10000, this.designWidth+20000, this.designHeight+10000);
     overlay.fill({ color: 0x000000, alpha: 0.6 });
     overlay.type = 'overlay';
-    overlay.zIndex = 999; // Ниже fail
+    overlay.zIndex = 999;
     
     this.scene.addChild(overlay);
     this.scene.objects.push(overlay);
 
-    // 2. Создаем fail
     const failSpawn = { type: 'fail', x: this.designWidth / 2 - 505, y: this.designHeight / 2 };
     this.spawnByType(failSpawn);
   
-    // 3. Через 1.5 секунды удаляем fail и затемнение, добавляем остальное
     setTimeout(() => {
-        // Удаляем fail
-        const failObj = this.scene.objects.find(obj => obj.type === 'fail');
-        if (failObj) {
-            this.scene.removeChild(failObj);
-            this.scene.objects = this.scene.objects.filter(o => o !== failObj);
-        }
-        
-        // Удаляем затемнение
-        const overlayObj = this.scene.objects.find(obj => obj.type === 'overlay');
-        if (overlayObj) {
-            this.scene.removeChild(overlayObj);
-            this.scene.objects = this.scene.objects.filter(o => o !== overlayObj);
-        }
-        
-        // Создаём Paypal и Flash
-        this.spawnByType({ type: 'paypal', x: this.designWidth / 2 - 505, y: this.designHeight / 2 });
-        this.spawnByType({ type: 'flash', x: this.designWidth / 2 - 505, y: this.designHeight / 2 });
+      const failObj = this.scene.objects.find(obj => obj.type === 'fail');
+      if (failObj) {
+        this.scene.removeChild(failObj);
+        this.scene.objects = this.scene.objects.filter(o => o !== failObj);
+      }
+      
+      const overlayObj = this.scene.objects.find(obj => obj.type === 'overlay');
+      if (overlayObj) {
+        this.scene.removeChild(overlayObj);
+        this.scene.objects = this.scene.objects.filter(o => o !== overlayObj);
+      }
+      
+      this.spawnByType({ type: 'paypal', x: this.designWidth / 2 - 505, y: this.designHeight / 2 });
+      this.spawnByType({ type: 'flash', x: this.designWidth / 2 - 505, y: this.designHeight / 2 });
 
-        // Показываем финальные очки и кнопку
-        if (this.scene.gameScore) this.scene.gameScore.visible = true;
-        if (this.scene.uiLayer?.installButton) this.scene.uiLayer.installButton.visible = true;
-
+      if (this.scene.gameScore) this.scene.gameScore.visible = true;
+      if (this.scene.uiLayer?.installButton) this.scene.uiLayer.installButton.visible = true;
     }, 1500);
-}
-
-
-
+  }
 
   spawnTree() {
     const tree = new Sprite(Assets.get('tree'));
@@ -223,6 +213,26 @@ spawnGameOverSequence() {
     this.scene.objects.push(pole);
   }
 
+  spawnKust() {
+    // Массив доступных текстур кустов
+    const kustTextures = ['kust1', 'kust2', 'kust3'];
+    
+    // Получаем текущую текстуру и переходим к следующей
+    const textureName = kustTextures[this.currentKustIndex];
+    this.currentKustIndex = (this.currentKustIndex + 1) % kustTextures.length;
+    
+    const kust = new Sprite(Assets.get(textureName));
+    kust.x = this.designWidth + 200;
+    kust.y = this.designHeight * 0.53; // Или отрегулируйте высоту по необходимости
+    kust.scale.set(0.5);
+    kust.anchor.set(1,1);
+    kust.type = 'kust';
+    kust.zIndex = 1;
+
+    this.scene.addChild(kust);
+    this.scene.objects.push(kust);
+  }
+
   spawnByType(spawn) {
     let obj;
     switch (spawn.type) {
@@ -235,7 +245,7 @@ spawnGameOverSequence() {
         obj = new Sprite(Assets.get(spawn.texture || 'money'));
         obj.scale.set(0.09);
         obj.type = 'money';
-        obj.anchor.set(0.5, 0.5);
+        obj.anchor.set(0.5, 1);
         obj.zIndex = 5;
         break;
       case 'card':
@@ -258,6 +268,19 @@ spawnGameOverSequence() {
       case 'pole':
         obj = new Sprite(Assets.get('pole'));
         obj.type = 'pole';
+        obj.zIndex = 5;
+        break;
+      case 'kust':
+        // Для точечного спавна также используем поочерёдность
+        const kustTextures = ['kust1', 'kust2', 'kust3'];
+        const textureIndex = Math.floor(Math.random() * kustTextures.length); // Или можно использовать циклический подход
+        const kustTexture = kustTextures[textureIndex];
+        
+        
+        obj = new Sprite(Assets.get(kustTexture));
+        obj.type = 'kust';
+        obj.scale.set(0.5);
+        obj.anchor.set(1,1);
         obj.zIndex = 5;
         break;
       case 'cone':
@@ -303,18 +326,18 @@ spawnGameOverSequence() {
         obj.scale.set(1);
         obj.anchor.set(0.5, 0.5);
         obj.type = 'flash';
-        obj.rotationSpeed = 0.03
+        obj.rotationSpeed = 0.03;
         obj.zIndex = 1399;
         break;
       case 'tape':
-       this.scene.tape.visible = true;
+        this.scene.tape.visible = true;
         this.scene.tape.x = 1550;
         this.scene.tape.zIndex = 2000;
         break;
       case 'tear':
         this.scene.tape.tear();
         break;
-       case 'firework':
+      case 'firework':
         this.scene.gameFinished = true;
         this.scene.seq.start();
         this.scene.gameScore.visible = true;

@@ -99,6 +99,18 @@ export const manifest = {
           alias: 'fail',
           src: 'assets/sprites/fail.webp'
         },
+        {
+          alias: 'kust1',
+          src: 'assets/sprites/kust1.webp'
+        },
+         {
+          alias: 'kust2',
+          src: 'assets/sprites/kust2.webp'
+        },
+         {
+          alias: 'kust3',
+          src: 'assets/sprites/kust3.webp'
+        },
         
       ]
     }
