@@ -4,16 +4,17 @@ import { BottomPanel } from './BottomPanel.js';
 import { ScorePanel } from './ScorePanel.js';
 import { CtaButton } from './CtaButton.js';
 import { InstallButton } from './InstallButton.js';
-
-
+import { TextPopup } from '../objects/TextPopup.js';
+import { Timer } from '../objects/Timer.js';
 
 export class UiLayer extends Container {
-  constructor() {
+  constructor(width, height) {
     super();
-
+    this.width = width;
+    this.height = height;
     this.heartsDisplay = new HeartsDisplay();
     this.addChild(this.heartsDisplay);
-  
+
     this.bottomPanel = new BottomPanel();
     this.addChild(this.bottomPanel);
 
@@ -39,5 +40,14 @@ export class UiLayer extends Container {
     this.scorePanel.onDprChange(scaleDpr);
     this.heartsDisplay.onDprChange(scaleDpr);
     this.installButton.onDprChange(scaleDpr);
-  };
+    this.ctaButton.onDprChange(scaleDpr);
+  }
+
+  // update(delta) {
+  //   this.children.forEach((child) => {
+  //     if (child?.update) {
+  //       child.update(delta);
+  //     }
+  //   });
+  // }
 }

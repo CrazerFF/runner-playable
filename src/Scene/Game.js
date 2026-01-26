@@ -1,4 +1,4 @@
-import { Container, Graphics, Sprite, Assets } from 'pixi.js'; 
+import { Container, Graphics, Sprite, Assets } from 'pixi.js';
 import { sound } from '../objects/SoundManager';
 import { Player } from '../objects/Player.js';
 import { Spawner } from '../objects/Spawner.js';
@@ -8,11 +8,12 @@ import { TutorialManager } from '../objects/TutorialManager.js';
 import { Tape } from '../objects/Tape.js';
 import { Firework } from '../objects/Firework.js';
 import { FireworkSequence } from '../objects/FireworkSequence.js';
-import { GameScoreDisplay} from '../objects/GameScoreDisplay.js'
+import { GameScoreDisplay } from '../objects/GameScoreDisplay.js';
 import { CtaButton } from '../Hud/CtaButton.js';
+import { TextPopup } from '../objects/TextPopup.js';
 
 export class Game extends Container {
-  constructor(designWidth, designHeight, uiLayer) {
+  constructor(designWidth, designHeight, w, h, uiLayer) {
     super();
     this.DESIGN_W = designWidth;
     this.DESIGN_H = designHeight;
@@ -25,18 +26,27 @@ export class Game extends Container {
     this.gamePaused = false;
     this.gameFinished = false;
     this.flagJump = false;
-    
+
+    this.collectCount = 0;
+
+    this.collectMessages = ['Awesome!', 'Perfect!', 'Fantastic!'];
+
     // ВКЛЮЧАЕМ ИНТЕРАКТИВНОСТЬ КОНТЕЙНЕРА
     this.eventMode = 'static';
     this.interactiveChildren = true;
 
     this.create();
     this.setupControls();
+    //  this.resize(w, h);
 
     // запуск фоновой музыки
-    window.addEventListener('pointerdown', () => {
-    sound.playMusic();
-    }, { once: true });
+    window.addEventListener(
+      'pointerdown',
+      () => {
+        sound.playMusic();
+      },
+      { once: true },
+    );
   }
 
   create() {
@@ -49,8 +59,8 @@ export class Game extends Container {
 
     // Спавнер
     this.spawner = new Spawner(this, 1280, 720);
-    this.objects.push(this.spawner); 
-    
+    this.objects.push(this.spawner);
+
     // Игрок
     this.player = new Player(this);
     this.player.x = this.DESIGN_W / 2 - 125;
@@ -64,18 +74,18 @@ export class Game extends Container {
 
     this.tape = new Tape(0, 320);
     this.addChild(this.tape);
-    this.tape.visible = true;
+    this.tape.visible = false;
     this.objects.push(this.tape);
 
     this.seq = new FireworkSequence(this, this.DESIGN_W);
 
-    this.gameScore = new GameScoreDisplay(this.uiLayer.scorePanel);
-    this.addChild(this.gameScore);
-    this.gameScore.x = 150;
-    this.gameScore.y = 410;
-    this.gameScore.scale.set(0.7);
-    this.gameScore.zIndex = 3000;
-    this.gameScore.visible = false;
+    // this.gameScore = new GameScoreDisplay(this.uiLayer.scorePanel);
+    // this.addChild(this.gameScore);
+    // this.gameScore.x = 150;
+    // this.gameScore.y = 410;
+    // this.gameScore.scale.set(0.7);
+    // this.gameScore.zIndex = 3000;
+    // this.gameScore.visible = true;
 
     const click = new Howl({ src: ['click.mp3'], volume: 0.6 });
 
@@ -84,18 +94,18 @@ export class Game extends Container {
     });
 
     const music = new Howl({
-    src: ['music.mp3'],
-    loop: true,
-    volume: 0.3,
-});
+      src: ['music.mp3'],
+      loop: true,
+      volume: 0.3,
+    });
   }
 
   onGameOver() {
-    this.scene.gameFinished = true;       // чтобы включить секвенцию
-  //  this.scene.seq.start();               // запускаем таймлайн
-    this.scene.gameScore.visible = true;  // показываем финальные очки
-    this.scene.uiLayer.installButton.visible = true; // показываем кнопку
-}
+    this.scene.gameFinished = true; // чтобы включить секвенцию
+    //  this.scene.seq.start();               // запускаем таймлайн
+    this.scene.gameScore.visible = true; // показываем финальные очки
+    this.scene.uiLayer.installButton.visible = false; // показываем кнопку
+  }
 
   startTutorial() {
     if (this.gamePaused) return;
@@ -111,59 +121,85 @@ export class Game extends Container {
   }
 
   update(delta) {
-      this.seq.update(delta);
-      this.uiLayer.ctaButton.update(delta);
-      this.uiLayer.installButton.update(delta);
-      this.gameScore.update(delta);
-   if (this.gamePaused) {
-    // Обновляем только вращение flash объектов
-    for (const obj of this.objects) {
-      if (obj && obj.type === 'flash' && obj.rotationSpeed) {
-        obj.rotation += obj.rotationSpeed * delta;
+    this.seq.update(delta);
+    this.tutorial.update(delta);
+    this.uiLayer.ctaButton.update(delta);
+    this.uiLayer.installButton.update(delta);
+    //  this.uiLayer.update(delta);
+    // this.gameScore.update(delta);
+    if (this.spawner?.timer) {
+      this.spawner.timer.update(delta);
+    }
+
+    if (this.gamePaused) {
+      // Обновляем только вращение flash объектов
+      for (const obj of this.objects) {
+        if (obj && obj.type === 'flash' && obj.rotationSpeed) {
+          obj.rotation += obj.rotationSpeed * delta;
+        }
+      }
+      if (this.tutorial.hand) {
+        this.tutorial.animation(delta);
+      }
+      if (this.tape) {
+        this.tape.update(delta);
       }
     }
-    if (this.tutorial.hand) {
-      this.tutorial.animation(delta);
-    }
-    if (this.tape) {
-      this.tape.update(delta);
-    }
-  
-  }
-  if (this.gamePaused) return;
+    if (this.gamePaused) return;
     // апдейт всех объектов
     for (const obj of this.objects) {
       if (obj.update) obj.update(delta);
       if (obj._collectUpdate) {
-         obj._collectUpdate();
-      } 
+        obj._collectUpdate();
+      }
 
-       // удаляем объекты за пределами экрана
-    this.destroyOffscreenObjects();
+      // удаляем объекты за пределами экрана
+      this.destroyOffscreenObjects();
     }
-    
+
     CollisionManager.check(this.player, this.collidables, (obj) => {
-        if ((obj.type === 'enemy') || (obj.type === 'cone')) this.onPlayerHit(obj);
-        if ((obj.type === 'money') || (obj.type === 'card')) this.onPlayerCollectItem(obj, delta);
-          });
+      if (obj.type === 'enemy' || obj.type === 'cone') this.onPlayerHit(obj);
+      if (obj.type === 'money' || obj.type === 'card')
+        this.onPlayerCollectItem(obj, delta);
+    });
   }
 
- 
-onPlayerHit(obj) {
+  onPlayerHit(obj) {
     if (this.player.isHit) return;
     if (this.player.isJumping) return;
     sound.play('hit');
     this.player.isHit = true;
-    this.player.playHit();   // теперь сам Player решает, когда вернуться в бег
+    this.player.playHit(); // теперь сам Player решает, когда вернуться в бег
     this.player.flashRed();
     this.uiLayer.heartsDisplay.takeDamage();
-}
-
+  }
 
   onPlayerCollectItem(obj, delta) {
     if (!obj || obj._collected) return;
     obj._collected = true;
     sound.play('collect');
+
+    // ===== СЧЁТЧИК СБОРА =====
+    this.collectCount++;
+
+    // показываем текст только на каждую 3-ю вещь
+    if (this.collectCount % 4 === 0) {
+      const messageIndex =
+        Math.floor(this.collectCount / 3 - 1) % this.collectMessages.length;
+
+      const message = this.collectMessages[messageIndex];
+
+      const popup = new TextPopup(
+        message,
+        this.DESIGN_W / 2,
+        this.DESIGN_H / 2,
+        50,
+      );
+
+      popup.zIndex = 6700;
+      this.addChild(popup);
+      this.objects.push(popup);
+    }
 
     const isMoney = obj.type === 'money';
     const scoreValue = isMoney ? 20 : 35;
@@ -174,7 +210,7 @@ onPlayerHit(obj) {
     const startScale = obj.scale.x;
     const startRotation = obj.rotation || 0;
 
-    const duration = 40 ; // кадров
+    const duration = 40; // кадров
     let t = 0;
 
     // сколько крутиться (2 оборота)
@@ -195,7 +231,7 @@ onPlayerHit(obj) {
       // локальная точка цели (центр панели)
       const localTarget = {
         x: -panel.width * 4,
-        y: panel.height * 3
+        y: panel.height * 3,
       };
 
       // UI → global → Game
@@ -223,29 +259,27 @@ onPlayerHit(obj) {
     };
   }
 
-  addScore(value) {  
+  addScore(value) {
     this.score = value;
-    console.log('this.score', this.score);
     this.uiLayer.scorePanel.addScore(this.score);
   }
 
   setupControls() {
     this.on('touchend', (event) => {
-           if (!this.flagJump) return;
-           if (this.gamePaused) return;
+      if (!this.flagJump) return;
+      if (this.gamePaused) return;
 
-        this.player.jump();
-        sound.play('jump');
-
+      this.player.jump();
+      sound.play('jump');
     });
 
     this.on('pointerup', (event) => {
-           if (!this.flagJump) return;
+      if (!this.flagJump) return;
 
-        this.player.jump();
+      this.player.jump();
     });
-  };
-  
+  }
+
   resize(DESIGN_W, DESIGN_H, w, h) {
     if (!this.bg) return;
 
@@ -256,6 +290,11 @@ onPlayerHit(obj) {
     // Pivot и позиция — центр фонового тайла в сцене
     this.bg.pivot.set(this.bg.width / 2, this.bg.height / 2);
     this.bg.position.set(DESIGN_W / 2, DESIGN_H / 2);
+    this.children.forEach((child) => {
+      if (child?.resize) {
+        child.resize(w, h);
+      }
+    });
   }
 
   // ---- метод для удаления объектов за экраном ----
@@ -265,7 +304,13 @@ onPlayerHit(obj) {
       const obj = this.objects[i];
 
       // не удаляем фон, игрока и спавнер
-      if (obj === this.bg || obj === this.player || obj === this.spawner || obj === this.tape ) continue;
+      if (
+        obj === this.bg ||
+        obj === this.player ||
+        obj === this.spawner ||
+        obj === this.tape
+      )
+        continue;
 
       if (obj.x + (obj.width || 0) < -margin) {
         // удалить с канваса
@@ -300,6 +345,4 @@ onPlayerHit(obj) {
 
     obj.destroy();
   }
-
-
 }

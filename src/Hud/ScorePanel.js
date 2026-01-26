@@ -31,25 +31,8 @@ export class ScorePanel extends Container {
     this.addChild(this.scoreText);
 
     // отступ текста относительно панели
-    this.textMargin = 55;
+    this.textMargin = 57;
 
-    // финальный счет (по центру экрана)
-    this.finalTextStyle = new TextStyle({
-      fontFamily: 'font',
-      fontSize: 64 * 4,
-      fill: 0xffffff,
-      stroke: { // Исправлено: новый синтаксис для stroke
-        width: 6,
-        color: 0x000000
-      },
-      align: 'center',
-    });
-
-    this.finalText = new Text({ text: '', style: this.finalTextStyle });
-    this.finalText.anchor.set(0.5);
-    this.finalText.visible = false;
-    this.addChild(this.finalText);
-    this.finalText.scale.set(0.25);
 
     // для начального отображения
     this.resize(appWidth, appHeight);
@@ -63,26 +46,14 @@ export class ScorePanel extends Container {
     this.panel.y = margin;
 
     // текст справа от панели
-    this.scoreText.x = this.panel.x - this.panel.width + this.textMargin;
+    this.scoreText.x = this.panel.x - this.panel.width + this.textMargin - 2;
     this.scoreText.y = this.panel.y + this.panel.height / 2 - this.scoreText.height / 2;
-
-    // финальный текст по центру
-    this.finalText.x = appWidth / 2;
-    this.finalText.y = appHeight / 2;
   }
 
   onDprChange(scaleDpr) {
     this.panel.scale.set(this.baseScale / scaleDpr);
     this.scoreText.scale.set(0.25 / scaleDpr);
     this.textMargin = 60 / scaleDpr;
-    
-    // Обновляем stroke с новым синтаксисом
-    this.finalText.style.stroke = {
-      width: 6 / scaleDpr,
-      color: 0x000000
-    };
-    
-    this.finalText.scale.set(0.25 / scaleDpr);
   }
 
   addScore(amount) {
@@ -97,11 +68,10 @@ export class ScorePanel extends Container {
   reset() {
     this.score = 0;
     this.updateText();
-    this.finalText.visible = false;
   }
 
   scoreFinal() {
-    this.finalText.text = `$${this.score}`;
-    this.finalText.visible = true;
+  //  this.finalText.text = `$${this.score}`;
+  //  this.finalText.visible = true;
   }
 }

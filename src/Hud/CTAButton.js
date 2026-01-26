@@ -1,7 +1,8 @@
 import { Container, Sprite, Assets } from 'pixi.js';
 
 export class CtaButton extends Container {
-  constructor(scene, appWidth = 1280, appHeight = 720) { // по умолчанию можно указать размеры
+  constructor(scene, appWidth = 1280, appHeight = 720) {
+    // по умолчанию можно указать размеры
     super();
     this.scene = scene;
 
@@ -10,8 +11,8 @@ export class CtaButton extends Container {
     this.addChild(this.panel);
 
     // Базовые скейлы
-    this.baseScale = 1.9;
-    this.baseScaleVert = 3.5;
+    this.baseScale = 0.09;
+    this.baseScaleVert = 0.11;
 
     // Начальный масштаб
     this.panel.scale.set(this.baseScale);
@@ -19,6 +20,8 @@ export class CtaButton extends Container {
     // Эталонные размеры
     this.basePanelWidth = this.panel.width;
     this.basePanelHeight = this.panel.height;
+
+    this.paddingRight = 400;
 
     // Параметры пульсации
     this.pulseSpeed = 0.1;
@@ -40,23 +43,45 @@ export class CtaButton extends Container {
     this.resize(appWidth, appHeight);
   }
 
+  // resize(appWidth, appHeight) {
+  //   const scaleByWidth = appWidth / this.basePanelWidth;
+
+  //   if (appWidth > appHeight) {
+  //     this.currentBaseScale = this.baseScale * scaleByWidth * 0.15;
+  //   } else {
+  //     this.currentBaseScale = this.baseScaleVert * scaleByWidth * 0.15;
+  //   }
+
+  //   this.panel.scale.set(this.currentBaseScale);
+
+  //   // Позиция — правый нижний угол
+  //   this.paddingRight = 300 * scaleByWidth * (this.currentBaseScale * 10);
+  //   this.paddingBottom = -30 * scaleByWidth;
+
+  //   this.panel.x = appWidth - this.paddingRight;
+  //   this.panel.y = appHeight - this.panel.height - this.paddingBottom;
+  // }
+
   resize(appWidth, appHeight) {
     const scaleByWidth = appWidth / this.basePanelWidth;
+    
 
     if (appWidth > appHeight) {
-      this.currentBaseScale = this.baseScale * scaleByWidth * 0.15;
+      this.currentBaseScale = this.baseScale * scaleByWidth * 0.20;
     } else {
-      this.currentBaseScale = this.baseScaleVert * scaleByWidth * 0.15;
+      this.currentBaseScale = this.baseScaleVert * scaleByWidth * 0.27;
     }
 
-    this.panel.scale.set(this.currentBaseScale);
+    const margin = 800 * this.currentBaseScale;
+    const marginBottom = 260 * this.currentBaseScale;
 
-    // Позиция — правый нижний угол
-    const paddingRight = 300 * scaleByWidth;
-    const paddingBottom = -30 * scaleByWidth;
+    // позиция панели
+    this.panel.x = appWidth - margin;
+    this.panel.y = appHeight - marginBottom;
+  }
 
-    this.panel.x = appWidth - paddingRight;
-    this.panel.y = appHeight - this.panel.height - paddingBottom;
+  onDprChange(scaleDpr) {
+  //  this.panel.scale.set(this.baseScale / scaleDpr);
   }
 
   update(delta) {
@@ -64,24 +89,22 @@ export class CtaButton extends Container {
     const pulseFactor = Math.sin(this.pulseTime) * this.pulseScale;
     const currentScale = this.currentBaseScale * (1 + pulseFactor);
     this.panel.scale.set(currentScale);
-    if ( this.scene.installButton.visible) {
+    if (this.scene.installButton.visible) {
       this.panel.visible = false;
     }
   }
 
   openStore() {
-    const storeUrl = 'https://play.google.com/store/apps/details?id=com.justplay.app&hl=en&gl=US';
+    const storeUrl =
+      'https://play.google.com/store/apps/details?id=com.justplay.app&hl=en&gl=US';
 
     if (window.mraid?.open) {
       mraid.open(storeUrl);
-    } 
-    else if (window.dapi?.openStoreUrl) {
+    } else if (window.dapi?.openStoreUrl) {
       dapi.openStoreUrl(null, { url: storeUrl });
-    } 
-    else if (window.webkit?.messageHandlers?.openAppStore) {
+    } else if (window.webkit?.messageHandlers?.openAppStore) {
       window.webkit.messageHandlers.openAppStore.postMessage(storeUrl);
-    } 
-    else {
+    } else {
       window.open(storeUrl, '_blank');
     }
   }
