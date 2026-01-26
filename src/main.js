@@ -1,4 +1,4 @@
-import { Application, Assets } from 'pixi.js'; 
+import { Application, Assets } from 'pixi.js';
 import { manifest } from './objects/manifest.js';
 import { Game } from './Scene/Game.js';
 import { UiLayer } from './Hud/UiLayer.js';
@@ -9,77 +9,80 @@ import { UiLayer } from './Hud/UiLayer.js';
 
   const app = new Application();
 
+  // ===== 1. ИНИЦИАЛИЗАЦИЯ — ЧЁРНЫЙ ЭКРАН =====
   await app.init({
-    backgroundColor: 0xfce4d6,
+    backgroundColor: 0x000000, // ← ЧЁРНЫЙ ДО ПОЛНОЙ ЗАГРУЗКИ
     antialias: false,
-    resolution: Math.min(window.devicePixelRatio, 2),
+    resolution: Math.min(window.devicePixelRatio || 1, 2),
     autoDensity: true
   });
 
   globalThis.__PIXI_APP__ = app;
+
+  document.body.style.margin = '0';
+  document.body.style.padding = '0';
+  document.body.style.background = '#000';
 
   document.body.appendChild(app.canvas);
 
   app.canvas.addEventListener('contextmenu', e => e.preventDefault());
   app.canvas.style.touchAction = 'none';
 
-  // 1. Пробуем загрузить шрифт с обработкой ошибок
+  // ===== 2. ЗАГРУЗКА ШРИФТА =====
   let fontLoaded = false;
+
   try {
     const font = new FontFace('font', 'url(assets/fonts/font.ttf)');
     const loadedFont = await font.load();
     document.fonts.add(loadedFont);
     fontLoaded = true;
-  } catch (error) {
-    console.warn('Не удалось загрузить шрифт font.ttf:', error);
-    console.log('Будет использован системный шрифт');
+  } catch (e) {
+    console.warn('Шрифт не загрузился, используем системный');
   }
 
-  // 2. Ждем готовности шрифтов (даже если наш не загрузился)
   await document.fonts.ready;
-  
-  // 3. Загрузка ресурсов с обработкой ошибок
+
+  // ===== 3. ЗАГРУЗКА РЕСУРСОВ =====
   try {
     await Assets.init({ manifest });
     await Assets.loadBundle('game');
   } catch (error) {
-    console.error('Ошибка загрузки ресурсов игры:', error);
-    
-    // Если не удалось загрузить, пробуем загрузить критически важные ресурсы по отдельности
-    const criticalAssets = manifest.bundles.find(b => b.name === 'game');
-    if (criticalAssets) {
-      for (const asset of criticalAssets.assets) {
+    console.error('Ошибка загрузки ресурсов:', error);
+
+    // fallback: пробуем загрузить по одному
+    const bundle = manifest.bundles.find(b => b.name === 'game');
+    if (bundle) {
+      for (const asset of bundle.assets) {
         try {
           await Assets.load(asset.name);
         } catch (e) {
-          console.warn(`Не удалось загрузить ${asset.name}:`, e);
+          console.warn(`Не удалось загрузить ${asset.name}`);
         }
       }
     }
   }
 
-  // 4. Создаем UI с fallback шрифтом
+  // ===== 4. ТОЛЬКО ТЕПЕРЬ СОЗДАЁМ СЦЕНУ =====
   const uiLayer = new UiLayer();
-  
-  // 5. Создаем сцену игры
   const scene = new Game(DESIGN_W, DESIGN_H, uiLayer);
-  
-  // 6. Добавляем на сцену
+
+  // меняем фон на игровой
+  app.renderer.background.color = 0xfce4d6;
+
   app.stage.addChild(scene);
   app.stage.addChild(uiLayer);
 
-  let lastDpr = 2;
+  // ===== 5. RESIZE =====
+  let lastDpr = Math.min(window.devicePixelRatio || 1, 2);
 
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     app.renderer.resolution = dpr;
-
     app.renderer.resize(window.innerWidth, window.innerHeight);
 
     if (dpr !== lastDpr) {
-      const scaleDpr = 2 / dpr;
-      uiLayer.onDprChange(dpr);
-
+      uiLayer.onDprChange?.(dpr);
+      lastDpr = dpr;
     }
 
     const w = app.renderer.width;
@@ -91,47 +94,24 @@ import { UiLayer } from './Hud/UiLayer.js';
     scene.x = (w - DESIGN_W * scale) / 2;
     scene.y = (h - DESIGN_H * scale) / 2;
 
-    scene.resize(DESIGN_W, DESIGN_H, w, h);
-    uiLayer.resize(w, h);
-    
-    // Обновляем UI о ресайзе (если нужно)
-    if (uiLayer.onResize) {
-      uiLayer.onResize(w, h);
-    }
+    scene.resize?.(DESIGN_W, DESIGN_H, w, h);
+    uiLayer.resize?.(w, h);
+    uiLayer.onResize?.(w, h);
   }
 
-  // 8. Настройка обработчиков событий
   window.addEventListener('resize', resize);
   window.addEventListener('orientationchange', resize);
-  
-  resize(); 
 
-  let lastTime = 0;
+  resize();
 
+  // ===== 6. ЗАПУСК ИГРЫ =====
   app.ticker.add((ticker) => {
     scene.update(ticker.deltaTime);
-    
-    // Обновляем UI слой если есть метод update
-    if (uiLayer.update) {
-      uiLayer.update(ticker.deltaTime);
-    }
+    uiLayer.update?.(ticker.deltaTime);
   });
 
-  // 11. Обработка ошибок (опционально)
-  window.addEventListener('error', (event) => {
-    console.error('Глобальная ошибка:', event.error);
-    
-    // Можно показать сообщение пользователю
-    if (event.error.message.includes('font')) {
-      console.log('Игнорируем ошибку шрифта, игра продолжит работу');
-    }
-  });
-
-  // 12. Для отладки
-  console.log('Игра запущена. Шрифт загружен:', fontLoaded);
+  console.log('Игра запущена. Шрифт:', fontLoaded);
 
 })().catch((error) => {
-  console.error('Фатальная ошибка при запуске игры:', error);
-  
-  document.body.appendChild(errorDiv);
+  console.error('Фатальная ошибка при запуске:', error);
 });

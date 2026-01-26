@@ -64,7 +64,7 @@ export class Game extends Container {
 
     this.tape = new Tape(0, 320);
     this.addChild(this.tape);
-    this.tape.visible = false;
+    this.tape.visible = true;
     this.objects.push(this.tape);
 
     this.seq = new FireworkSequence(this, this.DESIGN_W);

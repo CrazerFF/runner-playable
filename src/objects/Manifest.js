@@ -110,6 +110,14 @@ export const manifest = {
          {
           alias: 'kust3',
           src: 'assets/sprites/kust3.webp'
+        },
+        {
+          alias: 'tape_curved',
+          src: 'assets/sprites/other1.webp'
+        },
+        {
+          alias: 'point',
+          src: 'assets/sprites/point.webp'
         }
         
       ]

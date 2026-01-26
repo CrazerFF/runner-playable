@@ -65,7 +65,7 @@ export class Spawner {
       { time: 29.8, type: 'paypal', x: 162, y:360, texture: 'card' },
 
       { time: 24.2, type: 'tape'},
-      { time: 29.2, type: 'tear'},
+      { time: 0.2, type: 'tear'},
       { time: 29.9, type: 'firework'},
 
     ];
