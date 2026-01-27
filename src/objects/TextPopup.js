@@ -36,13 +36,16 @@ export class TextPopup extends Container {
     this.roundPixels = true;
   }
 
-  update(delta) {
+update(delta) {
+    const speed = 1;      // пиксели на кадр
+    const totalLife = 90; // кадров жизни
     this.life -= delta;
-    this.y -= 1 * delta;
-    this.alpha = this.life / 120;
+    this.y -= speed * delta;   // умножаем на 60, чтобы скорость была в пикселях/сек
+    this.alpha = this.life / totalLife;
 
     if (this.life <= 0) {
-      this.destroy({ children: true });
+        this.destroy({ children: true });
     }
-  }
+}
+
 }

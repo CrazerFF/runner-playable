@@ -1,6 +1,7 @@
 import { Sprite, Assets, Graphics } from 'pixi.js';
 import { Enemy } from './Enemy.js';
 import { sound } from './SoundManager';
+import { TextPopup } from './TextPopup.js';
 
 export class Spawner {
   constructor(scene, designWidth, designHeight) {
@@ -25,6 +26,7 @@ export class Spawner {
     // обычные спавны по времени
     this.scheduledSpawns = [
       { time: 0.0, type: 'startIntro' },
+      { time: 0.0, type: 'money', x: 0, y: 0, texture: 'money' },
       { time: 0.2, type: 'money', x: 1000, y: 440, texture: 'money' },
       { time: 2.8, type: 'money', x: 1000, y: 440, texture: 'money' },
       { time: 3.3, type: 'card', x: 1500, y: 430, texture: 'card' },
@@ -248,6 +250,16 @@ export class Spawner {
         obj.type = 'money';
         obj.anchor.set(0.5, 1);
         obj.zIndex = 5;
+
+        this.textPopup = new TextPopup(
+          'Congratulations! /n choose yo',
+          this.designWidth/2-510,
+          this.designHeight/2-200,
+          45
+        );
+        this.scene.addChild(this.textPopup);
+        this.textPopup.zIndex=2700;
+
         break;
       case 'card':
         obj = new Sprite(Assets.get(spawn.texture || 'card'));
@@ -354,6 +366,14 @@ export class Spawner {
         obj.zIndex = 5000;
         sound.play('fail');
         sound.stopMusic();
+
+        this.textPopup = new TextPopup(
+          'Congratulations!',
+          this.hand.x,
+          this.hand.y - 220,
+          45
+        );
+        this.addChild(this.textPopup);
         break;
     }
 

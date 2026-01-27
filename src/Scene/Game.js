@@ -112,6 +112,7 @@ export class Game extends Container {
 
   update(delta) {
       this.seq.update(delta);
+       this.tutorial.update(delta);
       this.uiLayer.ctaButton.update(delta);
       this.uiLayer.installButton.update(delta);
       this.gameScore.update(delta);
@@ -141,6 +142,7 @@ export class Game extends Container {
        // удаляем объекты за пределами экрана
     this.destroyOffscreenObjects();
     }
+   
     
     CollisionManager.check(this.player, this.collidables, (obj) => {
         if ((obj.type === 'enemy') || (obj.type === 'cone')) this.onPlayerHit(obj);

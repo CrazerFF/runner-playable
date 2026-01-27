@@ -106,7 +106,8 @@ export class TutorialManager extends Container {
   }
 
   // ===== ТАП =====
-  onTap() {
+// ===== ТАП =====
+onTap() {
     if (!this.active) return;
 
     console.log('Tutorial tap detected');
@@ -116,32 +117,45 @@ export class TutorialManager extends Container {
     
     // Скрываем кликабельную область
     this.clickArea.visible = false;
-    
     this.hand.visible = false;
 
+    // Если есть текст, запускаем отложенное уничтожение через 3 секунды
     if (this.textPopup) {
-      this.textPopup.destroy();
-      this.textPopup = null;
+        const popup = this.textPopup;
+
+        // Через 3 секунды уничтожаем попап и очищаем ссылку
+        setTimeout(() => {
+            if (popup && !popup.destroyed) {
+                popup.destroy({ children: true });
+            }
+            if (this.textPopup === popup) {
+                this.textPopup = null;
+            }
+        }, 3000);
     }
 
     this.game.player.playRun();
-  }
+}
+
 
   // ===== ОБНОВЛЕНИЕ =====
-  update(delta) {
-    if (this.textPopup) {
-      if (this.textPopup.destroyed) {
-        this.textPopup = null;
-        return;
-      }
+update(delta) {
+    if (this.game.gamePaused) return;
+  if (this.textPopup) {
+    if (this.textPopup.destroyed) {
+      this.textPopup = null;
+      return;
+    }
+    
+    // Защита от больших значений delta
+    const safeDelta = Math.min(delta, 0.4);
+    this.textPopup.update(safeDelta);
 
-      this.textPopup.update(delta);
-
-      if (this.textPopup && this.textPopup.life <= 0) {
-        this.textPopup = null;
-      }
+    if (this.textPopup && this.textPopup.life <= 0) {
+      this.textPopup = null;
     }
   }
+}
 
   // ===== ОЧИСТКА =====
   destroy(options) {
