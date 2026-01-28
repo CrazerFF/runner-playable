@@ -9,12 +9,12 @@ import { UiLayer } from './Hud/UiLayer.js';
 
   const app = new Application();
 
-  // ===== 1. ИНИЦИАЛИЗАЦИЯ — ЧЁРНЫЙ ЭКРАН =====
+  // =====  ИНИЦИАЛИЗАЦИЯ — ЧЁРНЫЙ ЭКРАН =====
   await app.init({
     backgroundColor: 0x000000, // ← ЧЁРНЫЙ ДО ПОЛНОЙ ЗАГРУЗКИ
     antialias: false,
     resolution: Math.min(window.devicePixelRatio || 1, 2),
-    autoDensity: true
+    autoDensity: true,
   });
 
   globalThis.__PIXI_APP__ = app;
@@ -25,10 +25,10 @@ import { UiLayer } from './Hud/UiLayer.js';
 
   document.body.appendChild(app.canvas);
 
-  app.canvas.addEventListener('contextmenu', e => e.preventDefault());
+  app.canvas.addEventListener('contextmenu', (e) => e.preventDefault());
   app.canvas.style.touchAction = 'none';
 
-  // ===== 2. ЗАГРУЗКА ШРИФТА =====
+  // =====  ЗАГРУЗКА ШРИФТА =====
   let fontLoaded = false;
 
   try {
@@ -42,15 +42,14 @@ import { UiLayer } from './Hud/UiLayer.js';
 
   await document.fonts.ready;
 
-  // ===== 3. ЗАГРУЗКА РЕСУРСОВ =====
+  // =====  ЗАГРУЗКА РЕСУРСОВ =====
   try {
     await Assets.init({ manifest });
     await Assets.loadBundle('game');
   } catch (error) {
     console.error('Ошибка загрузки ресурсов:', error);
 
-    // fallback: пробуем загрузить по одному
-    const bundle = manifest.bundles.find(b => b.name === 'game');
+    const bundle = manifest.bundles.find((b) => b.name === 'game');
     if (bundle) {
       for (const asset of bundle.assets) {
         try {
@@ -61,10 +60,11 @@ import { UiLayer } from './Hud/UiLayer.js';
       }
     }
   }
+  const w = app.renderer.width;
+  const h = app.renderer.height;
 
-  // ===== 4. ТОЛЬКО ТЕПЕРЬ СОЗДАЁМ СЦЕНУ =====
-  const uiLayer = new UiLayer();
-  const scene = new Game(DESIGN_W, DESIGN_H, uiLayer);
+  const uiLayer = new UiLayer(w, h);
+  const scene = new Game(DESIGN_W, DESIGN_H, w, h, uiLayer);
 
   // меняем фон на игровой
   app.renderer.background.color = 0xfce4d6;
@@ -73,16 +73,17 @@ import { UiLayer } from './Hud/UiLayer.js';
   app.stage.addChild(uiLayer);
 
   // ===== 5. RESIZE =====
-  let lastDpr = Math.min(window.devicePixelRatio || 1, 2);
+  let lastDpr = 2;
 
   function resize() {
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
     app.renderer.resolution = dpr;
+
     app.renderer.resize(window.innerWidth, window.innerHeight);
 
     if (dpr !== lastDpr) {
-      uiLayer.onDprChange?.(dpr);
-      lastDpr = dpr;
+      const scaleDpr = 2 / dpr;
+      uiLayer.onDprChange(dpr);
     }
 
     const w = app.renderer.width;
@@ -95,6 +96,7 @@ import { UiLayer } from './Hud/UiLayer.js';
     scene.y = (h - DESIGN_H * scale) / 2;
 
     scene.resize?.(DESIGN_W, DESIGN_H, w, h);
+   // console.log('w', w);
     uiLayer.resize?.(w, h);
     uiLayer.onResize?.(w, h);
   }
@@ -103,6 +105,7 @@ import { UiLayer } from './Hud/UiLayer.js';
   window.addEventListener('orientationchange', resize);
 
   resize();
+  
 
   // ===== 6. ЗАПУСК ИГРЫ =====
   app.ticker.add((ticker) => {
@@ -110,8 +113,7 @@ import { UiLayer } from './Hud/UiLayer.js';
     uiLayer.update?.(ticker.deltaTime);
   });
 
-  console.log('Игра запущена. Шрифт:', fontLoaded);
-
+  //console.log('Игра запущена. Шрифт:', fontLoaded);
 })().catch((error) => {
-  console.error('Фатальная ошибка при запуске:', error);
+  //console.error('Фатальная ошибка при запуске:', error);
 });

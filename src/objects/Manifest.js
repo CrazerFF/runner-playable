@@ -116,8 +116,8 @@ export const manifest = {
           src: 'assets/sprites/other1.webp'
         },
         {
-          alias: 'point',
-          src: 'assets/sprites/point.webp'
+          alias: 'other1',
+          src: 'assets/sprites/other1.webp'
         }
         
       ]

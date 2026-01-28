@@ -1,4 +1,4 @@
-import { Container, Graphics, Text, TextStyle } from 'pixi.js';
+import { Container, Graphics, Text, TextStyle } from "pixi.js";
 
 export class InstallButton extends Container {
   constructor() {
@@ -14,10 +14,10 @@ export class InstallButton extends Container {
 
     // Создаем стиль для текста
     const textStyle = new TextStyle({
-      fontFamily: 'font',
+      fontFamily: "font",
       fill: 0xffffff,
-      fontWeight: '900',
-      align: 'center',
+      fontWeight: "900",
+      align: "center",
       wordWrap: true,
       breakWords: true,
       stroke: {
@@ -28,27 +28,27 @@ export class InstallButton extends Container {
 
     // Создаем текст новым способом
     this.label = new Text({
-      text: 'INSTALL AND EARN',
+      text: "INSTALL AND EARN",
       style: textStyle,
     });
     this.label.anchor.set(0.5);
     this.addChild(this.label);
 
     // Делаем кнопку интерактивной
-    this.eventMode = 'static';
-    this.cursor = 'pointer';
+    this.eventMode = "static";
+    this.cursor = "pointer";
     this.interactive = true;
     this.buttonMode = true;
 
     // Обработчик клика для открытия ссылки
-    this.on('pointerdown', () => this.openStore());
+    this.on("pointerdown", () => this.openStore());
 
     // Эффекты при наведении
-    this.on('pointerover', () => {
+    this.on("pointerover", () => {
       this.label.tint = 0xdddddd;
     });
 
-    this.on('pointerout', () => {
+    this.on("pointerout", () => {
       this.label.tint = 0xffffff;
     });
 
@@ -137,43 +137,7 @@ export class InstallButton extends Container {
     });
   }
 
-  // Метод для открытия магазина
-  openStore() {
-    const storeUrl =
-      'https://play.google.com/store/apps/details?id=com.justplay.app&hl=en&gl=US';
 
-    // Проверяем окружение (MRAID/DAPI для рекламных сетей)
-    if (window.mraid && mraid.open) {
-      // Для рекламных сетей с MRAID
-      mraid.open(storeUrl);
-    } else if (window.dapi && dapi.openStoreUrl) {
-      // Для рекламных сетей с DAPI
-      dapi.openStoreUrl(null, { url: storeUrl });
-    } else if (
-      window.webkit &&
-      window.webkit.messageHandlers &&
-      window.webkit.messageHandlers.openAppStore
-    ) {
-      // Для iOS WebView
-      window.webkit.messageHandlers.openAppStore.postMessage(storeUrl);
-    } else {
-      // Для обычного браузера
-      window.open(storeUrl, '_blank');
-    }
-
-    // Эффект нажатия
-    this.scale.set(this.baseScale * (1 - 0.1) * 0.7);
-    setTimeout(() => {
-      this.scale.set(this.baseScale * 0.7);
-    }, 100);
-  }
-
-  // Метод для плавной пульсации
-  update(delta) {
-    this.pulseTime += delta * this.pulseSpeed;
-    const pulseFactor = Math.sin(this.pulseTime) * this.pulseScale;
-    this.scale.set(this.baseScale * (1 + pulseFactor) * 0.7);
-  }
 
   onDprChange(scaleDpr) {
     this.baseWidth = 420 / scaleDpr;

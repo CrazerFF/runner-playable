@@ -12,8 +12,6 @@ export class TutorialManager extends Container {
 
     // ===== ПРОЗРАЧНАЯ КЛИКАБЕЛЬНАЯ ОБЛАСТЬ =====
     this.clickArea = new Graphics();
-    
-    
 
     // рука
     this.hand = new Sprite(Assets.get('hand'));
@@ -26,10 +24,15 @@ export class TutorialManager extends Container {
     this.hand.on('pointerup', () => this.onTap());
 
     // Исправление для PixiJS v8 (убрать предупреждения)
-    this.clickArea.rect(-400, -400, this.game.DESIGN_W + 1400, this.game.DESIGN_H + 400);
-    this.clickArea.fill(0xFFFFFF);
+    this.clickArea.rect(
+      -400,
+      -400,
+      this.game.DESIGN_W + 1400,
+      this.game.DESIGN_H + 400,
+    );
+    this.clickArea.fill(0xffffff);
     this.clickArea.alpha = 0.01; // почти прозрачный, но кликабельный
-    
+
     this.clickArea.interactive = true;
     this.clickArea.cursor = 'pointer';
     this.clickArea.zIndex = 1010;
@@ -42,19 +45,19 @@ export class TutorialManager extends Container {
   }
 
   animation(delta) {
-  if (!this.hand || !this.hand.visible) return;
-  
-  // Просто используем текущее время
-  const time = Date.now() * 0.003; // текущее время в секундах
-  
-  // Пульсация масштаба
-  const scale = 1 + Math.sin(time * 2) * 0.005;
-  this.hand.scale.set(scale);
-  
-  // Легкое движение вверх-вниз
-  const offsetY = Math.sin(time * 1.5) * 3;
-  this.hand.y = this.game.DESIGN_H / 2 + 160 + offsetY; // или другая базовая позиция
-}
+    if (!this.hand || !this.hand.visible) return;
+
+    // Просто используем текущее время
+    const time = Date.now() * 0.003; // текущее время в секундах
+
+    // Пульсация масштаба
+    const scale = 1 + Math.sin(time * 2) * 0.005;
+    this.hand.scale.set(scale);
+
+    // Легкое движение вверх-вниз
+    const offsetY = Math.sin(time * 1.5) * 3;
+    this.hand.y = this.game.DESIGN_H / 2 + 160 + offsetY; // или другая базовая позиция
+  }
 
   // ===== СТАРТОВЫЙ ТУТОРИАЛ =====
   startIntro() {
@@ -69,16 +72,17 @@ export class TutorialManager extends Container {
     this.clickArea.visible = true;
 
     this.hand.visible = true;
-    this.hand.x = this.game.DESIGN_W / 2 ;
+    this.hand.x = this.game.DESIGN_W / 2;
     this.hand.y = this.game.DESIGN_H / 2 + 160;
 
     this.textPopup = new TextPopup(
       'Tap to start earning!',
       this.hand.x,
       this.hand.y - 220,
-      45
+      45,
     );
-    this.addChild(this.textPopup);
+    this.game.addChild(this.textPopup);
+    this.textPopup.zIndex = 3500;
   }
 
   // ===== ВРАГ =====
@@ -100,62 +104,61 @@ export class TutorialManager extends Container {
       'Jump to avoid enemies!',
       this.hand.x,
       this.hand.y - 120,
-      50
+      50,
     );
-    this.addChild(this.textPopup);
+    this.game.addChild(this.textPopup);
+    this.textPopup.zIndex = 3500;
   }
 
   // ===== ТАП =====
-// ===== ТАП =====
-onTap() {
+  // ===== ТАП =====
+  onTap() {
     if (!this.active) return;
 
-    console.log('Tutorial tap detected');
     this.active = false;
     this.game.gamePaused = false;
     this.game.player.playIdle();
-    
+
     // Скрываем кликабельную область
     this.clickArea.visible = false;
     this.hand.visible = false;
 
     // Если есть текст, запускаем отложенное уничтожение через 3 секунды
     if (this.textPopup) {
-        const popup = this.textPopup;
+      const popup = this.textPopup;
 
-        // Через 3 секунды уничтожаем попап и очищаем ссылку
-        setTimeout(() => {
-            if (popup && !popup.destroyed) {
-                popup.destroy({ children: true });
-            }
-            if (this.textPopup === popup) {
-                this.textPopup = null;
-            }
-        }, 3000);
+      // Через 3 секунды уничтожаем попап и очищаем ссылку
+      setTimeout(() => {
+        if (popup && !popup.destroyed) {
+          popup.destroy({ children: true });
+        }
+        if (this.textPopup === popup) {
+          this.textPopup = null;
+        }
+      }, 3000);
     }
 
     this.game.player.playRun();
-}
-
+  }
 
   // ===== ОБНОВЛЕНИЕ =====
-update(delta) {
+  update(delta) {
     if (this.game.gamePaused) return;
-  if (this.textPopup) {
-    if (this.textPopup.destroyed) {
-      this.textPopup = null;
-      return;
-    }
-    
-    // Защита от больших значений delta
-    const safeDelta = Math.min(delta, 0.4);
-    this.textPopup.update(safeDelta);
+    if (this.textPopup) {
+      if (this.textPopup.destroyed) {
+        this.textPopup = null;
+        return;
+      }
 
-    if (this.textPopup && this.textPopup.life <= 0) {
-      this.textPopup = null;
+      // Защита от больших значений delta
+      const safeDelta = Math.min(delta, 0.4);
+      this.textPopup.update(safeDelta);
+
+      if (this.textPopup && this.textPopup.life <= 0) {
+        this.textPopup = null;
+      }
     }
   }
-}
 
   // ===== ОЧИСТКА =====
   destroy(options) {
